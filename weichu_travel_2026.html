@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Weichu 2026 攝影之旅</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+:root{
+  --bg:#0F0F0F;--surface:#1A1A1A;--surface2:#242424;--border:#2E2E2E;
+  --text:#F0EDE8;--text2:#9A9691;--text3:#5C5A57;
+  --abu:#C8965A;--nl:#4A8C6F;--ice:#5B8FBE;--paris:#B8607A;
+}
+.app{background:var(--bg);min-height:100vh;max-width:430px;margin:0 auto;padding-bottom:80px;display:block}
+
+.hero{padding:20px 16px 14px;border-bottom:0.5px solid var(--border)}
+.hero-eyebrow{font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--text3);margin-bottom:6px}
+.hero-title{font-size:22px;font-weight:600;color:var(--text);line-height:1.2;margin-bottom:4px}
+.hero-sub{font-size:13px;color:var(--text2)}
+
+.phase-pills{display:flex;gap:6px;padding:12px 16px;overflow-x:auto;scrollbar-width:none;border-bottom:0.5px solid var(--border)}
+.phase-pills::-webkit-scrollbar{display:none}
+.pill{font-size:11px;padding:5px 12px;border-radius:20px;border:0.5px solid var(--border);color:var(--text2);background:var(--surface);cursor:pointer;white-space:nowrap;transition:all .15s;flex-shrink:0}
+
+.day-list{padding:0 16px}
+.day-card{margin-top:14px;border:0.5px solid var(--border);border-radius:14px;overflow:hidden;background:var(--surface)}
+.day-hd{padding:12px 14px;display:flex;justify-content:space-between;align-items:flex-start}
+.day-date{font-size:11px;color:var(--text3);margin-bottom:2px}
+.day-title{font-size:14px;font-weight:500;color:var(--text)}
+.day-badge{font-size:10px;padding:3px 8px;border-radius:20px;white-space:nowrap;margin-top:2px;display:inline-block}
+
+.item{display:flex;gap:10px;padding:10px 14px;border-top:0.5px solid var(--border);align-items:flex-start;cursor:pointer;text-decoration:none}
+.item:active{background:var(--surface2)}
+.item-time{font-size:10px;color:var(--text3);min-width:38px;padding-top:2px;flex-shrink:0}
+.item-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.item-body{flex:1}
+.item-name{font-size:13px;color:var(--text);line-height:1.4}
+.item-note{font-size:11px;color:var(--text2);margin-top:2px;line-height:1.4}
+.item-map{font-size:10px;color:var(--text3);margin-top:4px;display:flex;align-items:center;gap:3px}
+.item-tag{font-size:10px;padding:1px 6px;border-radius:20px;margin-right:4px;display:inline-block}
+.dead-bar{background:#2A1A1A;border-left:2px solid #C0392B;padding:8px 14px;display:flex;gap:10px;align-items:flex-start}
+.dead-time{font-size:11px;color:#E74C3C;min-width:38px;font-weight:600;flex-shrink:0;padding-top:2px}
+.dead-text{font-size:12px;color:#E74C3C;font-weight:500}
+.dead-note{font-size:11px;color:#9A4A4A;margin-top:1px}
+
+.c-fly{background:#1A2A3A;color:#5B8FBE}.c-see{background:#1A2A2A;color:#4A8C6F}
+.c-eat{background:#2A1A0A;color:#C8965A}.c-camp{background:#0A2A1A;color:#3DBE7A}
+.c-hotel{background:#2A1A2A;color:#B8607A}
+.d-fly{background:#5B8FBE}.d-see{background:#4A8C6F}.d-eat{background:#C8965A}
+.d-camp{background:#3DBE7A}.d-hotel{background:#B8607A}.d-warn{background:#E74C3C}
+
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:430px;max-width:100vw;background:rgba(15,15,15,.95);border-top:0.5px solid var(--border);display:flex;padding:10px 0 14px;z-index:100}
+.bnav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;color:var(--text3);transition:color .15s}
+.bnav-item.on{color:#E8D5B0}
+.bnav-item i{font-size:20px}
+.bnav-label{font-size:9px;letter-spacing:.04em}
+
+.panel{display:none}.panel.on{display:block}
+
+.summary{margin:14px 16px 0;background:var(--surface);border:0.5px solid var(--border);border-radius:14px;padding:14px}
+.sum-title{font-size:11px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:10px}
+.sum-row{display:flex;justify-content:space-between;padding:7px 0;border-bottom:0.5px solid var(--border);font-size:13px}
+.sum-row:last-child{border-bottom:none}
+.sum-label{color:var(--text2)}.sum-val{color:var(--text);font-weight:500}
+.sum-val.ok{color:#4A8C6F}.sum-val.warn{color:#E74C3C}
+
+.todo-card{margin:10px 16px 0;background:var(--surface);border:0.5px solid var(--border);border-radius:14px;overflow:hidden}
+.todo-hd{padding:10px 14px;font-size:11px;color:var(--text3);letter-spacing:.08em;text-transform:uppercase;border-bottom:0.5px solid var(--border)}
+.todo-item{display:flex;gap:10px;padding:10px 14px;border-top:0.5px solid var(--border);align-items:center;cursor:pointer}
+.todo-item:first-of-type{border-top:none}
+.todo-cb{width:16px;height:16px;border-radius:4px;border:1px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:all .15s;font-size:10px;color:white}
+.todo-cb.done{background:#4A8C6F;border-color:#4A8C6F}
+.todo-text{font-size:13px;color:var(--text);flex:1;line-height:1.4}
+.todo-text.done{text-decoration:line-through;color:var(--text3)}
+.todo-badge{font-size:10px;padding:2px 7px;border-radius:20px}
+.b-red{background:#2A0A0A;color:#E74C3C}.b-amber{background:#2A1A0A;color:#C8965A}.b-green{background:#0A2A1A;color:#3DBE7A}
+</style>
+</head>
+<body>
+
+<div id="tab-trip" class="app">
+  <div class="hero">
+    <div class="hero-eyebrow">WEICHU · 2026 攝影之旅</div>
+    <div class="hero-title">20 天跨國旅行</div>
+    <div class="hero-sub">阿布達比 · 荷蘭 · 冰島 · 巴黎</div>
+  </div>
+  <div class="phase-pills">
+    <div class="pill on" id="pill-abu" style="background:#C8965A;border-color:#C8965A;color:#0F0F0F" onclick="showPhase('abu')">🕌 阿布達比①</div>
+    <div class="pill" id="pill-nl" onclick="showPhase('nl')">🇳🇱 荷蘭</div>
+    <div class="pill" id="pill-ice" onclick="showPhase('ice')">🇮🇸 冰島</div>
+    <div class="pill" id="pill-paris" onclick="showPhase('paris')">🇫🇷 巴黎</div>
+    <div class="pill" id="pill-abu2" onclick="showPhase('abu2')">🕌 阿布達比②</div>
+  </div>
+
+  <!-- ABU 1 -->
+  <div class="panel on day-list" id="ph-abu">
+    <div class="day-card">
+      <div class="day-hd" style="background:#1C1610">
+        <div><div class="day-date">10/26 (一)</div><div class="day-title">台北出發</div></div>
+        <div class="day-badge" style="background:#2A1E08;color:#C8965A">Day 1</div>
+      </div>
+      <div class="dead-bar"><div class="dead-time">15:40</div><div><div class="dead-text">⚠ 最晚抵達桃園機場</div><div class="dead-note">EY899 18:40 起飛，提前 3 小時</div></div></div>
+      <div class="item" onclick="gm('桃園國際機場')">
+        <div class="item-time">18:40</div><div class="item-dot d-fly"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-fly">飛機</span>EY899 桃園 → 阿布達比</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 桃園機場 T2</div></div>
+      </div>
+    </div>
+    <div class="day-card">
+      <div class="day-hd" style="background:#1C1610">
+        <div><div class="day-date">10/27 (二)</div><div class="day-title">阿布達比快閃 ①</div></div>
+        <div class="day-badge" style="background:#2A1E08;color:#C8965A">Day 2</div>
+      </div>
+      <div class="item"><div class="item-time">00:30</div><div class="item-dot d-fly"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-fly">抵達</span>AUH 落地，機場梳洗小睡</div></div></div>
+      <div class="item" onclick="gm('Sheikh+Zayed+Grand+Mosque+Abu+Dhabi')">
+        <div class="item-time">09:00</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>謝赫扎耶德大清真寺</div>
+        <div class="item-note">晨光最美，遊客最少。官網提前登記（免費），注意著裝</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Corniche+Road+Abu+Dhabi')">
+        <div class="item-time">10:45</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">順路</span>Corniche 海濱大道</div>
+        <div class="item-note">計程車回機場順路繞，清真寺遠景 + 藍色海灣同框</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="dead-bar"><div class="dead-time">11:40</div><div><div class="dead-text">⚠ 最晚完成登機</div><div class="dead-note">EY041 14:10 起飛，提前 2.5 小時</div></div></div>
+      <div class="item"><div class="item-time">14:10</div><div class="item-dot d-fly"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-fly">飛機</span>EY041 阿布達比 → 阿姆斯特丹</div></div></div>
+      <div class="item" onclick="gm('Amsterdam+Schiphol+Airport')">
+        <div class="item-time">18:35</div><div class="item-dot d-hotel"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-hotel">抵達</span>史基浦 AMS → 飯店 Check-in</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> Schiphol Airport</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 荷蘭 -->
+  <div class="panel day-list" id="ph-nl">
+    <div class="day-card">
+      <div class="day-hd" style="background:#0E1A14">
+        <div><div class="day-date">10/28 (三)</div><div class="day-title">烏特勒支一日</div></div>
+        <div class="day-badge" style="background:#152A1E;color:#4A8C6F">Day 3</div>
+      </div>
+      <div class="item"><div class="item-time">09:00</div><div class="item-dot d-fly"></div>
+        <div class="item-body"><div class="item-name">搭火車 AMS → Utrecht Centraal（30 分鐘）</div></div></div>
+      <div class="item" onclick="gm('Oudegracht+Utrecht')">
+        <div class="item-time">10:30</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Oudegracht 雙層運河</div>
+        <div class="item-note">沿運河走，地下廊道咖啡館，秋天落葉映水面</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Dom+Tower+Utrecht')">
+        <div class="item-time">11:30</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Dom Tower 登頂</div>
+        <div class="item-note">463 階，俯瞰全城。提前網購 domtower.nl</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Gys+Utrecht+restaurant')">
+        <div class="item-time">13:00</div><div class="item-dot d-eat"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-eat">午餐</span>Gys Utrecht</div>
+        <div class="item-note">運河邊露台，荷式輕食 + 生啤，秋天有戶外暖爐</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Pandhof+Utrecht')">
+        <div class="item-time">14:15</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Pandhof 隱藏修道院花園</div>
+        <div class="item-note">Dom Tower 後方，免費，安靜迴廊，遊客極少</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item"><div class="item-time">16:30</div><div class="item-dot d-hotel"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-hotel">返回</span>火車回阿姆斯特丹</div></div></div>
+    </div>
+    <div class="day-card">
+      <div class="day-hd" style="background:#0E1A14">
+        <div><div class="day-date">10/29 (四)</div><div class="day-title">海牙 + 台夫特</div></div>
+        <div class="day-badge" style="background:#152A1E;color:#4A8C6F">Day 4</div>
+      </div>
+      <div class="item"><div class="item-time">08:45</div><div class="item-dot d-fly"></div>
+        <div class="item-body"><div class="item-name">搭火車 AMS → Den Haag Centraal（50 分鐘）</div></div></div>
+      <div class="item" onclick="gm('Mauritshuis+The+Hague')">
+        <div class="item-time">10:00</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Mauritshuis 皇家美術館</div>
+        <div class="item-note">戴珍珠耳環的少女在這！提前網購 mauritshuis.nl</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Binnenhof+The+Hague')">
+        <div class="item-time">12:30</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Binnenhof 國會廣場</div>
+        <div class="item-note">步行 3 分鐘，哥德式建築倒映水池</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Dudok+Den+Haag')">
+        <div class="item-time">13:00</div><div class="item-dot d-eat"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-eat">午餐</span>Dudok</div>
+        <div class="item-note">Art Deco 老咖啡館，招牌溫熱蘋果派必點</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Markt+Delft')">
+        <div class="item-time">14:30</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>台夫特 Markt 廣場</div>
+        <div class="item-note">火車 15 分鐘，維梅爾出生地，荷蘭最美老城廣場</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Royal+Delft+Museum')">
+        <div class="item-time">15:30</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Royal Delft 藍白瓷工廠</div>
+        <div class="item-note">荷蘭藍白陶瓷發源地，工廠參觀 + 咖啡廳</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item"><div class="item-time">17:00</div><div class="item-dot d-hotel"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-hotel">返回</span>火車回阿姆斯特丹</div></div></div>
+    </div>
+    <div class="day-card">
+      <div class="day-hd" style="background:#0E1A14">
+        <div><div class="day-date">10/30 (五)</div><div class="day-title">阿姆斯特丹 → 藍湖 → 冰島</div></div>
+        <div class="day-badge" style="background:#152A1E;color:#4A8C6F">Day 5</div>
+      </div>
+      <div class="item" onclick="gm('Jordaan+Amsterdam')">
+        <div class="item-time">上午</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Jordaan 區運河散步</div>
+        <div class="item-note">Prinsengracht 最美運河，隨意拍隨意走</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item"><div class="item-time">12:00</div><div class="item-dot d-hotel"></div>
+        <div class="item-body"><div class="item-name">回飯店取行李 → 前往機場</div></div></div>
+      <div class="dead-bar"><div class="dead-time">10:25</div><div><div class="dead-text">⚠ 最晚完成登機</div><div class="dead-note">FI501 12:55 起飛，提前 2.5 小時</div></div></div>
+      <div class="item"><div class="item-time">12:55</div><div class="item-dot d-fly"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-fly">飛機</span>FI501 AMS → KEF（3.5 小時）</div></div></div>
+      <div class="item"><div class="item-time">15:25</div><div class="item-dot d-fly"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-fly">抵達</span>KEF 落地 → 直奔藍湖接駁</div>
+        <div class="item-note">行李寄放停車場（1000 ISK/件），不用進市區</div></div></div>
+      <div class="item" onclick="gm('Blue+Lagoon+Iceland')">
+        <div class="item-time">17:00</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">體驗</span>藍湖溫泉 Comfort（已預約 17:00）</div>
+        <div class="item-note">夜晚泡溫泉，奶藍色水面，可能有極光 🌌 泡約 2 小時</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Kex+Hostel+Reykjavik')">
+        <div class="item-time">19:30</div><div class="item-dot d-hotel"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-hotel">入住</span>Kex Hostel Check-in</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 冰島 -->
+  <div class="panel day-list" id="ph-ice">
+    <div class="day-card">
+      <div class="day-hd" style="background:#101822">
+        <div><div class="day-date">10/31 (六)</div><div class="day-title">雷克雅維克 → SEEDS 報到</div></div>
+        <div class="day-badge" style="background:#182030;color:#5B8FBE">Day 6</div>
+      </div>
+      <div class="item" onclick="gm('Sandholt+Bakery+Reykjavik')">
+        <div class="item-time">09:00</div><div class="item-dot d-eat"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-eat">早餐</span>Sandholt Bakery</div>
+        <div class="item-note">肉桂捲 + 黑麥麵包，雷克雅維克最好的麵包坊</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Hallgrimskirkja+Reykjavik')">
+        <div class="item-time">10:00</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Hallgrimskirkja 教堂登塔</div>
+        <div class="item-note">俯瞰全城，彩虹街道角度必拍</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Harpa+Concert+Hall+Reykjavik')">
+        <div class="item-time">11:00</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Harpa 音樂廳</div>
+        <div class="item-note">蜂巢玻璃幕牆，陰天最出色</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Icelandic+Street+Food+Reykjavik')">
+        <div class="item-time">13:00</div><div class="item-dot d-eat"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-eat">午餐</span>Icelandic Street Food</div>
+        <div class="item-note">羊肉湯免費續碗，11 月喝超暖</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Reykjavik+Roasters')">
+        <div class="item-time">14:30</div><div class="item-dot d-eat"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-eat">咖啡</span>Reykjavik Roasters</div>
+        <div class="item-note">冰島最好的精品咖啡館</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Baejarins+Beztu+Pylsur+Reykjavik')">
+        <div class="item-time">15:30</div><div class="item-dot d-eat"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-eat">小食</span>Bæjarins Beztu Pylsur 熱狗攤</div>
+        <div class="item-note">冰島必吃熱狗，一根 €4，連柯林頓都吃過</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Grettisgata+3+Reykjavik')">
+        <div class="item-time">18:00</div><div class="item-dot d-camp"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-camp">報到</span>SEEDS 集合 ⚠️ 帶 €450 現金！</div>
+        <div class="item-note">Grettisgata 3a, 101 Reykjavík</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+    </div>
+    <div class="day-card">
+      <div class="day-hd" style="background:#101822">
+        <div><div class="day-date">11/01–11/09</div><div class="day-title">SEEDS 國際志工營隊</div></div>
+        <div class="day-badge" style="background:#182030;color:#5B8FBE">Day 7–15</div>
+      </div>
+      <div class="item"><div class="item-time">全程</div><div class="item-dot d-camp"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-camp">營隊</span>住宿 + 素食餐 SEEDS 提供，無 WiFi</div>
+        <div class="item-note">攝影工作坊、夜間極光、環保活動。記得帶數位相機！</div></div></div>
+    </div>
+    <div class="day-card">
+      <div class="day-hd" style="background:#101822">
+        <div><div class="day-date">11/09 (一)</div><div class="day-title">解散 → 市區自由</div></div>
+        <div class="day-badge" style="background:#182030;color:#5B8FBE">Day 15</div>
+      </div>
+      <div class="item"><div class="item-time">中午</div><div class="item-dot d-camp"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-camp">結束</span>營隊解散，Kex 行李寄放後 Check-in</div></div></div>
+      <div class="item" onclick="gm('Grandi+Matholl+Reykjavik')">
+        <div class="item-time">下午</div><div class="item-dot d-eat"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-eat">午餐</span>Grandi Mathöll 食物大廳</div>
+        <div class="item-note">港口區室內美食廣場，龍蝦湯、魚塔可</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Litli+Barinn+Reykjavik')">
+        <div class="item-time">晚上</div><div class="item-dot d-eat"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-eat">晚餐</span>Litli Barinn 小酒吧</div>
+        <div class="item-note">軟熟蛋佐 Skyr、羊肉腸，吧台一個人剛好</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+    </div>
+    <div class="day-card">
+      <div class="day-hd" style="background:#101822">
+        <div><div class="day-date">11/10 (二)</div><div class="day-title">斯奈山半島一日遊</div></div>
+        <div class="day-badge" style="background:#182030;color:#5B8FBE">Day 16</div>
+      </div>
+      <div class="item"><div class="item-time">07:00</div><div class="item-dot d-camp"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-camp">出發</span>Klook/Troll 一日遊集合</div>
+        <div class="item-note">底片至少帶 5–6 卷！明天 04:30 要離開飯店</div></div></div>
+      <div class="item" onclick="gm('Kirkjufell+Iceland')">
+        <div class="item-time">上午</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Kirkjufell 教堂山 + 瀑布</div>
+        <div class="item-note">山前瀑布前景，底片機經典構圖</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Djupalonssandur+Iceland')">
+        <div class="item-time">午後</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Djúpalónssandur 黑沙灘</div>
+        <div class="item-note">玄武岩地形，強對比，底片機絕佳</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Arnarstapi+Iceland')">
+        <div class="item-time">午後</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Arnarstapi 海蝕洞漁村</div>
+        <div class="item-note">玄武岩拱門，幾乎沒遊客</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item"><div class="item-time">20:00</div><div class="item-dot d-hotel"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-hotel">返回</span>雷克雅維克，早點睡！04:30 起床</div></div></div>
+    </div>
+  </div>
+
+  <!-- 巴黎 -->
+  <div class="panel day-list" id="ph-paris">
+    <div class="day-card">
+      <div class="day-hd" style="background:#1C0E14">
+        <div><div class="day-date">11/11 (三)</div><div class="day-title">清晨飛巴黎 → 下午開逛</div></div>
+        <div class="day-badge" style="background:#2A1520;color:#B8607A">Day 17</div>
+      </div>
+      <div class="dead-bar"><div class="dead-time">04:30</div><div><div class="dead-text">⚠ 最晚離開 Kex</div><div class="dead-note">FI542 07:30 起飛，Flybus 45 分鐘到 KEF</div></div></div>
+      <div class="item"><div class="item-time">07:30</div><div class="item-dot d-fly"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-fly">飛機</span>FI542 KEF → 巴黎 CDG（3.5 小時）</div></div></div>
+      <div class="item"><div class="item-time">11:30</div><div class="item-dot d-fly"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-fly">抵達</span>CDG → RER B 進市區（35 分鐘）</div>
+        <div class="item-note">買 Navigo Easy 卡方便後續搭地鐵</div></div></div>
+      <div class="item" onclick="gm('Hotel+de+Roubaix+Paris')">
+        <div class="item-time">13:00</div><div class="item-dot d-hotel"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-hotel">入住</span>Hôtel de Roubaix Check-in</div>
+        <div class="item-note">3 區 Marais 旁，每間房不同風格，面街小窗戶！</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Du+Pain+et+des+Idees+Paris')">
+        <div class="item-time">14:00</div><div class="item-dot d-eat"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-eat">第一站</span>Du Pain et des Idées</div>
+        <div class="item-note">Canal 旁，開心果蝸牛可頌必買！週一公休</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Canal+Saint-Martin+Paris')">
+        <div class="item-time">15:00</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Canal Saint-Martin 運河散步</div>
+        <div class="item-note">鐵拱橋倒影，下午光線最迷人</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Pont+des+Arts+Paris')">
+        <div class="item-time">17:00</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Pont des Arts → 塞納河黃昏</div>
+        <div class="item-note">11 月日落約 17:30，光線柔和</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Bouillon+Chartier+Paris')">
+        <div class="item-time">19:30</div><div class="item-dot d-eat"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-eat">晚餐</span>Bouillon Chartier</div>
+        <div class="item-note">1896 年老食堂，鴨腿飯 €14，Belle Époque 大廳</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+    </div>
+    <div class="day-card">
+      <div class="day-hd" style="background:#1C0E14">
+        <div><div class="day-date">11/12 (四)</div><div class="day-title">巴黎最後一天 → 晚上起飛</div></div>
+        <div class="day-badge" style="background:#2A1520;color:#B8607A">Day 18</div>
+      </div>
+      <div class="item" onclick="gm('Sacre+Coeur+Montmartre+Paris')">
+        <div class="item-time">08:00</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Montmartre 蒙馬特早晨</div>
+        <div class="item-note">08:00 前幾乎沒遊客，石板路空街</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Sainte-Chapelle+Paris')">
+        <div class="item-time">11:00</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Sainte-Chapelle 聖禮拜堂</div>
+        <div class="item-note">整面彩繪玻璃，晴天最美。必須提前網購！</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Jardin+du+Palais+Royal+Paris')">
+        <div class="item-time">12:30</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Jardin du Palais Royal</div>
+        <div class="item-note">Buren 黑白柱子 + 安靜花園，免費</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Place+des+Vosges+Paris')">
+        <div class="item-time">13:30</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Le Marais + Place des Vosges</div>
+        <div class="item-note">巴黎最古老廣場，紅磚拱廊圍繞</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('L+As+du+Fallafel+Paris')">
+        <div class="item-time">14:30</div><div class="item-dot d-eat"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-eat">午餐</span>L'As du Fallafel</div>
+        <div class="item-note">猶太區排隊名店，炸鷹嘴豆餅 €7</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Cafe+de+Flore+Paris')">
+        <div class="item-time">15:30</div><div class="item-dot d-eat"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-eat">下午茶</span>Café de Flore</div>
+        <div class="item-note">紅椅沙發 + 羊角麵包，最後的巴黎時光</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Laduree+Saint-Germain+Paris')">
+        <div class="item-time">16:30</div><div class="item-dot d-eat"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-eat">購物</span>Ladurée 馬卡龍帶走</div>
+        <div class="item-note">Saint-Germain 分店，當飛機零食</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="dead-bar"><div class="dead-time">17:00</div><div><div class="dead-text">⚠ 最晚出發前往 CDG</div><div class="dead-note">市區到機場至少 45 分鐘，CDG 超大要留安檢時間</div></div></div>
+      <div class="dead-bar"><div class="dead-time">18:15</div><div><div class="dead-text">⚠ 最晚完成登機</div><div class="dead-note">EY034 21:15 起飛，提前 3 小時</div></div></div>
+      <div class="item"><div class="item-time">21:15</div><div class="item-dot d-fly"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-fly">飛機</span>EY034 巴黎 CDG → 阿布達比</div></div></div>
+    </div>
+  </div>
+
+  <!-- ABU 2 -->
+  <div class="panel day-list" id="ph-abu2">
+    <div class="day-card">
+      <div class="day-hd" style="background:#1C1610">
+        <div><div class="day-date">11/13 (五)</div><div class="day-title">阿布達比快閃 ② → 返台</div></div>
+        <div class="day-badge" style="background:#2A1E08;color:#C8965A">Day 19</div>
+      </div>
+      <div class="item"><div class="item-time">06:45</div><div class="item-dot d-fly"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-fly">抵達</span>AUH 落地，機場早餐梳洗</div></div></div>
+      <div class="item" onclick="gm('Louvre+Abu+Dhabi')">
+        <div class="item-time">10:00</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">景點</span>Louvre Abu Dhabi</div>
+        <div class="item-note">提前網購。12:00 守穹頂下等光雨，幾何光影是重點！</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Saadiyat+Beach+Abu+Dhabi')">
+        <div class="item-time">13:30</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">順路</span>Saadiyat Beach 白沙灘</div>
+        <div class="item-note">羅浮宮走路 5 分鐘，白沙 + 穹頂遠景</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="item" onclick="gm('Qasr+Al+Watan+Abu+Dhabi')">
+        <div class="item-time">14:30</div><div class="item-dot d-see"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-see">備選</span>Qasr Al Watan 總統府</div>
+        <div class="item-note">車程 20 分鐘，金色圓頂，注意回程時間</div>
+        <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div></div>
+      </div>
+      <div class="dead-bar"><div class="dead-time">17:30</div><div><div class="dead-text">⚠ 最晚出發回機場</div><div class="dead-note">車程 25 分鐘，EY898 21:25 起飛，提前 3 小時</div></div></div>
+      <div class="item"><div class="item-time">21:25</div><div class="item-dot d-fly"></div>
+        <div class="item-body"><div class="item-name"><span class="item-tag c-fly">飛機</span>EY898 阿布達比 → 台北</div></div></div>
+    </div>
+    <div class="day-card">
+      <div class="day-hd" style="background:#0A1A0A">
+        <div><div class="day-date">11/14 (六)</div><div class="day-title">平安返台 🎉</div></div>
+        <div class="day-badge" style="background:#0F2A0F;color:#4A8C6F">Day 20</div>
+      </div>
+      <div class="item"><div class="item-time">09:00</div><div class="item-dot d-camp"></div>
+        <div class="item-body"><div class="item-name">桃園機場落地，帶著底片和故事回家</div></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- 待辦頁 -->
+<div id="tab-todo" style="display:none;background:var(--bg);min-height:100vh;padding-bottom:80px">
+  <div class="hero"><div class="hero-eyebrow">CHECK LIST</div><div class="hero-title">出發前待辦</div></div>
+  <div class="todo-card">
+    <div class="todo-hd">🔴 緊急</div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-cb"></div><div class="todo-text">買 Icelandair 兩段機票（下週二）</div><div class="todo-badge b-red">待辦</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-cb"></div><div class="todo-text">訂阿姆斯特丹飯店（3晚 10/27–30）</div><div class="todo-badge b-red">待辦</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-cb"></div><div class="todo-text">訂 Kex Hostel 雷克雅維克（3晚）</div><div class="todo-badge b-red">待辦</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-cb done"></div><div class="todo-text done">訂 Hôtel de Roubaix 巴黎（1晚）</div><div class="todo-badge b-green">完成 ✓</div></div>
+  </div>
+  <div class="todo-card">
+    <div class="todo-hd">🟡 建議盡快</div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-cb"></div><div class="todo-text">訂藍湖溫泉（10/30 17:00 Comfort + 機場接駁）</div><div class="todo-badge b-amber">待辦</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-cb"></div><div class="todo-text">訂斯奈山半島一日遊 Klook/Troll（11/10）</div><div class="todo-badge b-amber">待辦</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-cb"></div><div class="todo-text">謝赫扎耶德清真寺官網提前登記</div><div class="todo-badge b-amber">待辦</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-cb"></div><div class="todo-text">買 Saily 歐洲 30 天 eSIM</div><div class="todo-badge b-amber">待辦</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-cb"></div><div class="todo-text">買旅遊保險</div><div class="todo-badge b-amber">待辦</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-cb"></div><div class="todo-text">準備 €450 現金（SEEDS 費用）</div><div class="todo-badge b-amber">待辦</div></div>
+  </div>
+  <div class="todo-card">
+    <div class="todo-hd">🎟 門票預購</div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-cb"></div><div class="todo-text">Dom Tower 烏特勒支（domtower.nl）</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-cb"></div><div class="todo-text">Mauritshuis 海牙（mauritshuis.nl）</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-cb"></div><div class="todo-text">Sainte-Chapelle 巴黎（必須！現場排 1 小時）</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-cb"></div><div class="todo-text">Louvre Abu Dhabi（louvreabudhabi.ae）</div></div>
+  </div>
+  <div class="todo-card">
+    <div class="todo-hd">✅ 已完成</div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-cb done"></div><div class="todo-text done">EY 大段機票 4 段</div><div class="todo-badge b-green">完成 ✓</div></div>
+    <div class="todo-item" onclick="toggleTodo(this)"><div class="todo-cb done"></div><div class="todo-text done">SEEDS 報名</div><div class="todo-badge b-green">完成 ✓</div></div>
+  </div>
+</div>
+
+<!-- 資訊頁 -->
+<div id="tab-info" style="display:none;background:var(--bg);min-height:100vh;padding-bottom:80px">
+  <div class="hero"><div class="hero-eyebrow">QUICK INFO</div><div class="hero-title">重要資訊</div></div>
+  <div class="summary">
+    <div class="sum-title">機票總覽</div>
+    <div class="sum-row"><span class="sum-label">EY899 台北 → AUH</span><span class="sum-val">10/26 18:40</span></div>
+    <div class="sum-row"><span class="sum-label">EY041 AUH → AMS</span><span class="sum-val">10/27 14:10</span></div>
+    <div class="sum-row"><span class="sum-label">FI501 AMS → KEF</span><span class="sum-val ok">10/30 12:55 ✓</span></div>
+    <div class="sum-row"><span class="sum-label">FI542 KEF → CDG</span><span class="sum-val warn">11/11 07:30 ⚠ 待買</span></div>
+    <div class="sum-row"><span class="sum-label">EY034 CDG → AUH</span><span class="sum-val">11/12 21:15</span></div>
+    <div class="sum-row"><span class="sum-label">EY898 AUH → 台北</span><span class="sum-val">11/13 21:25</span></div>
+  </div>
+  <div class="summary" style="margin-top:10px">
+    <div class="sum-title">住宿</div>
+    <div class="sum-row"><span class="sum-label">阿姆斯特丹 3晚</span><span class="sum-val warn">⚠ 待訂</span></div>
+    <div class="sum-row"><span class="sum-label">Kex Hostel 3晚</span><span class="sum-val warn">⚠ 待訂</span></div>
+    <div class="sum-row"><span class="sum-label">SEEDS 營隊 10晚</span><span class="sum-val ok">含在費用內 ✓</span></div>
+    <div class="sum-row"><span class="sum-label">Hôtel de Roubaix 1晚</span><span class="sum-val ok">已訂 ✓</span></div>
+  </div>
+  <div class="summary" style="margin-top:10px">
+    <div class="sum-title">緊急聯絡</div>
+    <div class="sum-row"><span class="sum-label">SEEDS 緊急</span><span class="sum-val">Oscar +3547713300</span></div>
+    <div class="sum-row"><span class="sum-label">SEEDS 辦公室</span><span class="sum-val">Carina +3547713321</span></div>
+    <div class="sum-row"><span class="sum-label">Email</span><span class="sum-val">seeds@seeds.is</span></div>
+  </div>
+  <div class="summary" style="margin-top:10px">
+    <div class="sum-title">預算概況</div>
+    <div class="sum-row"><span class="sum-label">機票合計</span><span class="sum-val">≈ TWD 44,995</span></div>
+    <div class="sum-row"><span class="sum-label">SEEDS 費用</span><span class="sum-val">€450 現金</span></div>
+    <div class="sum-row"><span class="sum-label">住宿預估</span><span class="sum-val">≈ TWD 18,000</span></div>
+    <div class="sum-row"><span class="sum-label">總預估</span><span class="sum-val warn">≈ TWD 97,000</span></div>
+  </div>
+  <div class="summary" style="margin-top:10px">
+    <div class="sum-title">重要提醒</div>
+    <div class="sum-row"><span class="sum-label">藍湖泳衣</span><span class="sum-val warn">自備！不租泳衣</span></div>
+    <div class="sum-row"><span class="sum-label">Kex 退房</span><span class="sum-val">11:00，可寄放行李</span></div>
+    <div class="sum-row"><span class="sum-label">SEEDS 食物</span><span class="sum-val">全素食</span></div>
+    <div class="sum-row"><span class="sum-label">SEEDS WiFi</span><span class="sum-val warn">無！需 eSIM</span></div>
+    <div class="sum-row"><span class="sum-label">相機規格</span><span class="sum-val">需可切換手動模式</span></div>
+  </div>
+</div>
+
+<!-- 底部導覽 -->
+<div class="bnav">
+  <div class="bnav-item on" id="nav-trip" onclick="showTab('trip')">
+    <i class="ti ti-map-2"></i><span class="bnav-label">行程</span></div>
+  <div class="bnav-item" id="nav-todo" onclick="showTab('todo')">
+    <i class="ti ti-checklist"></i><span class="bnav-label">待辦</span></div>
+  <div class="bnav-item" id="nav-info" onclick="showTab('info')">
+    <i class="ti ti-info-circle"></i><span class="bnav-label">資訊</span></div>
+</div>
+
+<script>
+function gm(q){ window.open('https://maps.google.com/?q='+q,'_blank') }
+
+const phases=['abu','nl','ice','paris','abu2'];
+const phColors={abu:'#C8965A',nl:'#4A8C6F',ice:'#5B8FBE',paris:'#B8607A',abu2:'#C8965A'};
+
+function showPhase(id){
+  phases.forEach(p=>{
+    const el=document.getElementById('ph-'+p);
+    if(el) el.classList.toggle('on',p===id);
+    const pill=document.getElementById('pill-'+p);
+    if(pill){
+      if(p===id){ pill.style.background=phColors[id]; pill.style.borderColor=phColors[id]; pill.style.color='#0F0F0F'; }
+      else{ pill.style.background='var(--surface)'; pill.style.borderColor='var(--border)'; pill.style.color='var(--text2)'; }
+    }
+  });
+}
+
+function showTab(id){
+  document.getElementById('tab-trip').style.display = id==='trip'?'block':'none';
+  document.getElementById('tab-todo').style.display = id==='todo'?'block':'none';
+  document.getElementById('tab-info').style.display = id==='info'?'block':'none';
+  ['trip','todo','info'].forEach(t=>{
+    document.getElementById('nav-'+t).classList.toggle('on',t===id);
+  });
+}
+
+function toggleTodo(el){
+  const cb=el.querySelector('.todo-cb');
+  const txt=el.querySelector('.todo-text');
+  const badge=el.querySelector('.todo-badge');
+  const done=cb.classList.toggle('done');
+  if(done) cb.textContent='✓'; else cb.textContent='';
+  txt.classList.toggle('done',done);
+  if(badge){ badge.textContent=done?'完成 ✓':'待辦'; badge.className='todo-badge '+(done?'b-green':'b-red'); }
+}
+// init done items
+document.querySelectorAll('.todo-cb.done').forEach(cb=>cb.textContent='✓');
+</script>
+</body>
+</html>
