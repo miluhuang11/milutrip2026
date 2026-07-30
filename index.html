@@ -2020,6 +2020,25 @@ body {
 <script>
 function gm(q){ window.open('https://maps.google.com/?q='+q,'_blank') }
 
+const EDIT_PIN = "1106";
+const UNLOCK_KEY = "milu_trip_unlocked";
+
+function isUnlocked() {
+  return localStorage.getItem(UNLOCK_KEY) === "1";
+}
+
+function requireUnlock() {
+  if (isUnlocked()) return true;
+  const input = prompt("請輸入密碼以進行編輯或操作：");
+  if (input === null) return false;
+  if (input === EDIT_PIN) {
+    localStorage.setItem(UNLOCK_KEY, "1");
+    return true;
+  }
+  alert("密碼不對喔");
+  return false;
+}
+
 const phases=['abu','nl','ice','paris','abu2'];
 // Define active tab accent colors dynamically for body class
 const themeMap = {
@@ -2150,6 +2169,7 @@ function updateTodoProgress() {
 }
 
 function toggleTodoId(id) {
+  if (!requireUnlock()) return;
   const stateStr = localStorage.getItem('milutrip_todo_state');
   let state = {};
   if (stateStr) {
@@ -2193,6 +2213,7 @@ function closeFoodModal() {
 }
 
 function saveFoodMapUrl() {
+  if (!requireUnlock()) return;
   const input = document.getElementById('food-map-url');
   if (input) {
     const url = input.value.trim();
@@ -2309,6 +2330,7 @@ function clearSearch() {
 
 /* 離線文字備份快照下載 */
 function downloadOfflineBackup() {
+  if (!requireUnlock()) return;
   let content = `==================================================\n`;
   content += `✈️ MILU20 2026 歐洲自由行與志工旅行離線備份快照 ✈️\n`;
   content += `==================================================\n\n`;
