@@ -781,6 +781,116 @@ body {
   font-weight: 600;
   cursor: pointer;
 }
+
+/* Progress Bar流光動畫 */
+.todo-progress-bar {
+  background: linear-gradient(90deg, #137333 0%, #1bc762 50%, #137333 100%) !important;
+  background-size: 200% 100% !important;
+  animation: progressShine 3s linear infinite !important;
+}
+@keyframes progressShine {
+  0% { background-position: 0% 0%; }
+  100% { background-position: -200% 0%; }
+}
+
+/* 日分頁導覽按鈕 */
+.day-nav-tabs {
+  display: flex;
+  gap: 8px;
+  margin: 12px 16px 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding: 4px 0;
+}
+.day-nav-tabs::-webkit-scrollbar { display: none; }
+.day-nav-btn {
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  color: var(--text2);
+  background: var(--surface-solid);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.25s ease;
+  box-shadow: var(--card-shadow);
+}
+.day-nav-btn.active {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: #ffffff !important;
+}
+
+/* 即時氣象與時差快速連結條 */
+.info-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 12px 16px 2px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  padding: 8px 12px;
+  box-shadow: var(--card-shadow);
+  backdrop-filter: blur(10px);
+}
+.info-bar-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text2);
+}
+.info-bar-right {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.btn-weather {
+  font-family: inherit;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  border: 1px solid var(--primary);
+  background: var(--primary-light);
+  color: var(--primary);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.btn-weather:active {
+  transform: scale(0.95);
+}
+
+/* 離線文字備份按鈕 */
+.btn-backup {
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 10px 16px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--primary);
+  background: var(--primary);
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin: 14px 16px 0;
+  box-shadow: var(--card-shadow);
+}
+.btn-backup:active {
+  transform: scale(0.98);
+}
 </style>
 </head>
 <body>
@@ -822,6 +932,21 @@ body {
 
     <!-- ABU 1 -->
     <div class="day-list" id="ph-abu">
+      <!-- 氣象與時差條 -->
+      <div class="info-bar">
+        <div class="info-bar-left">⏰ 時差：比台灣慢 4 小時</div>
+        <div class="info-bar-right">
+          <a class="btn-weather" href="https://www.google.com/search?q=Abu+Dhabi+weather" target="_blank">
+            <i class="ti ti-sun"></i> 氣象查詢
+          </a>
+        </div>
+      </div>
+      <!-- 日分頁鈕 -->
+      <div class="day-nav-tabs" id="tabs-abu">
+        <button class="day-nav-btn active" onclick="showDayCard('abu', 0)">10/26 (一)</button>
+        <button class="day-nav-btn" onclick="showDayCard('abu', 1)">10/27 (二)</button>
+      </div>
+
       <div class="day-card">
         <div class="day-hd">
           <div><div class="day-date">10/26 (一)</div><div class="day-title">台北出發</div></div>
@@ -909,6 +1034,21 @@ body {
 
     <!-- 荷蘭 -->
     <div class="day-list" id="ph-nl" style="display:none;">
+      <!-- 氣象與時差條 -->
+      <div class="info-bar">
+        <div class="info-bar-left">⏰ 時差：比台灣慢 6 / 7 小時</div>
+        <div class="info-bar-right">
+          <a class="btn-weather" href="https://www.google.com/search?q=Netherlands+weather" target="_blank">
+            <i class="ti ti-cloud-rain"></i> 氣象查詢
+          </a>
+        </div>
+      </div>
+      <!-- 日分頁鈕 -->
+      <div class="day-nav-tabs" id="tabs-nl">
+        <button class="day-nav-btn active" onclick="showDayCard('nl', 0)">10/28 (三)</button>
+        <button class="day-nav-btn" onclick="showDayCard('nl', 1)">10/29 (四)</button>
+        <button class="day-nav-btn" onclick="showDayCard('nl', 2)">10/30 (五)</button>
+      </div>
 
       <div class="day-card">
         <div class="day-hd">
@@ -1107,6 +1247,22 @@ body {
 
     <!-- 冰島 -->
     <div class="day-list" id="ph-ice" style="display:none;">
+      <!-- 氣象與時差條 -->
+      <div class="info-bar">
+        <div class="info-bar-left">⏰ 時差：比台灣慢 8 小時</div>
+        <div class="info-bar-right">
+          <a class="btn-weather" href="https://www.google.com/search?q=Iceland+Reykjavik+weather" target="_blank">
+            <i class="ti ti-snowflake"></i> 氣象查詢
+          </a>
+        </div>
+      </div>
+      <!-- 日分頁鈕 -->
+      <div class="day-nav-tabs" id="tabs-ice">
+        <button class="day-nav-btn active" onclick="showDayCard('ice', 0)">10/31 (六)</button>
+        <button class="day-nav-btn" onclick="showDayCard('ice', 1)">11/01-11/09</button>
+        <button class="day-nav-btn" onclick="showDayCard('ice', 2)">11/09 (一)</button>
+      </div>
+
       <div class="day-card">
         <div class="day-hd">
           <div><div class="day-date">10/31 (六)</div><div class="day-title">雷克雅維克 → SEEDS 報到</div></div>
@@ -1240,6 +1396,22 @@ body {
 
     <!-- 巴黎 -->
     <div class="day-list" id="ph-paris" style="display:none;">
+      <!-- 氣象與時差條 -->
+      <div class="info-bar">
+        <div class="info-bar-left">⏰ 時差：比台灣慢 7 小時</div>
+        <div class="info-bar-right">
+          <a class="btn-weather" href="https://www.google.com/search?q=Paris+weather" target="_blank">
+            <i class="ti ti-cloud-sun"></i> 氣象查詢
+          </a>
+        </div>
+      </div>
+      <!-- 日分頁鈕 -->
+      <div class="day-nav-tabs" id="tabs-paris">
+        <button class="day-nav-btn active" onclick="showDayCard('paris', 0)">11/10 (二)</button>
+        <button class="day-nav-btn" onclick="showDayCard('paris', 1)">11/11 (三)</button>
+        <button class="day-nav-btn" onclick="showDayCard('paris', 2)">🗒️ 備選口袋</button>
+      </div>
+
       <div class="day-card">
         <div class="day-hd">
           <div><div class="day-date">11/10 (二)</div><div class="day-title">飛巴黎 → 下午抵達</div></div>
@@ -1511,6 +1683,21 @@ body {
 
     <!-- ABU 2 -->
     <div class="day-list" id="ph-abu2" style="display:none;">
+      <!-- 氣象與時差條 -->
+      <div class="info-bar">
+        <div class="info-bar-left">⏰ 時差：比台灣慢 4 小時</div>
+        <div class="info-bar-right">
+          <a class="btn-weather" href="https://www.google.com/search?q=Abu+Dhabi+weather" target="_blank">
+            <i class="ti ti-sun"></i> 氣象查詢
+          </a>
+        </div>
+      </div>
+      <!-- 日分頁鈕 -->
+      <div class="day-nav-tabs" id="tabs-abu2">
+        <button class="day-nav-btn active" onclick="showDayCard('abu2', 0)">11/12 (四)</button>
+        <button class="day-nav-btn" onclick="showDayCard('abu2', 1)">11/13 (五)</button>
+      </div>
+
       <div class="day-card">
         <div class="day-hd">
           <div><div class="day-date">11/12 (四)</div><div class="day-title">阿布達比快閃 ② → 返台</div></div>
@@ -1701,7 +1888,15 @@ body {
 
   <!-- 資訊分頁 -->
   <div id="tab-info" class="panel" style="background:var(--bg);min-height:100vh;padding-bottom:80px">
-    <div class="hero"><div class="hero-eyebrow">QUICK INFO</div><div class="hero-title">重要資訊</div></div>
+    <div class="hero">
+      <div class="hero-eyebrow">QUICK INFO</div>
+      <div class="hero-title">重要資訊</div>
+    </div>
+    
+    <!-- 離線備份按鈕 -->
+    <button class="btn-backup" onclick="downloadOfflineBackup()">
+      <i class="ti ti-download"></i> 💾 導出行程備份 (離線快照)
+    </button>
     
     <!-- 住宿資訊表格 -->
     <div class="summary">
@@ -1847,6 +2042,29 @@ function showPhase(id){
   
   // Set theme class on body
   document.body.setAttribute('data-theme', themeMap[id] || 'default');
+
+  // Automatically load the first day of the selected phase
+  showDayCard(id, 0);
+}
+
+function showDayCard(phaseId, index) {
+  const container = document.getElementById('ph-' + phaseId);
+  if (!container) return;
+
+  // Get all day cards directly inside this container
+  const cards = Array.from(container.querySelectorAll('.day-card'));
+  cards.forEach((card, idx) => {
+    card.style.display = idx === index ? 'block' : 'none';
+  });
+
+  // Update tabs active state
+  const tabsContainer = document.getElementById('tabs-' + phaseId);
+  if (tabsContainer) {
+    const buttons = tabsContainer.querySelectorAll('.day-nav-btn');
+    buttons.forEach((btn, idx) => {
+      btn.classList.toggle('active', idx === index);
+    });
+  }
 }
 
 function showTab(id){
@@ -2026,6 +2244,11 @@ function filterTrip() {
   const clearBtn = document.getElementById('search-clear');
   if (clearBtn) clearBtn.style.display = query ? 'block' : 'none';
   
+  // 搜尋時暫時隱藏日分頁鈕，否則顯示為 flex
+  document.querySelectorAll('.day-nav-tabs').forEach(tabBar => {
+    tabBar.style.display = query ? 'none' : 'flex';
+  });
+  
   document.querySelectorAll('.day-card').forEach(card => {
     let cardHasMatch = false;
     card.querySelectorAll('.item').forEach(item => {
@@ -2058,6 +2281,22 @@ function filterTrip() {
       card.style.display = 'none';
     }
   });
+
+  // 如果清空搜尋，恢復當前分頁的單日顯示狀態
+  if (query === '') {
+    const activePhasePill = document.querySelector('.phase-pills .pill.on');
+    if (activePhasePill) {
+      const activePhaseId = activePhasePill.id.replace('pill-', '');
+      const activeTabBtn = document.querySelector(`#tabs-${activePhaseId} .day-nav-btn.active`);
+      if (activeTabBtn) {
+        const btns = Array.from(document.querySelectorAll(`#tabs-${activePhaseId} .day-nav-btn`));
+        const idx = btns.indexOf(activeTabBtn);
+        showDayCard(activePhaseId, idx);
+      } else {
+        showDayCard(activePhaseId, 0);
+      }
+    }
+  }
 }
 
 function clearSearch() {
@@ -2066,6 +2305,74 @@ function clearSearch() {
     searchInput.value = '';
     filterTrip();
   }
+}
+
+/* 離線文字備份快照下載 */
+function downloadOfflineBackup() {
+  let content = `==================================================\n`;
+  content += `✈️ MILU20 2026 歐洲自由行與志工旅行離線備份快照 ✈️\n`;
+  content += `==================================================\n\n`;
+  
+  content += `🏠 【住宿明細】\n`;
+  content += `--------------------------------------------------\n`;
+  content += `• 阿姆斯特丹 (10/27 - 10/30, 3晚) - Conscious Hotel The Tire Station (已訂)\n`;
+  content += `• 雷克雅維克 (10/30 - 10/31, 1晚) - Kex Hostel 女性 6 人宿舍 (已訂)\n`;
+  content += `• 雷克雅維克 (11/09 - 11/10, 1晚) - Kex Hostel 女性 6 人宿舍 (已訂)\n`;
+  content += `• 巴黎 (11/10 - 11/11, 1晚) - Hôtel de Roubaix (已訂)\n`;
+  content += `• SEEDS 志工期間 (10/31 - 11/09, 10晚) - 營隊安排住宿 (含全素食)\n\n`;
+
+  content += `✈️ 【機票與航班】\n`;
+  content += `--------------------------------------------------\n`;
+  content += `• 10/26 18:40 - EY899 台北 (TPE) ➡️ 阿布達比 (AUH)\n`;
+  content += `• 10/27 14:10 - EY041 阿布達比 (AUH) ➡️ 阿姆斯特丹 (AMS)\n`;
+  content += `• 10/30 12:55 - FI501 阿姆斯特丹 (AMS) ➡️ 凱夫拉維克 (KEF)\n`;
+  content += `• 11/10 07:30 - FI542 凱夫拉維克 (KEF) ➡️ 巴黎戴高樂 (CDG)\n`;
+  content += `• 11/11 21:15 - EY034 巴黎戴高樂 (CDG) ➡️ 阿布達比 (AUH)\n`;
+  content += `• 11/12 21:25 - EY898 阿布達比 (AUH) ➡️ 台北 (TPE) (11/13 09:00 抵達)\n\n`;
+
+  content += `📞 【緊急聯絡】\n`;
+  content += `--------------------------------------------------\n`;
+  content += `• SEEDS 緊急聯絡人 (Oscar): +354 7713300\n`;
+  content += `• SEEDS 辦公室 (Carina): +354 7713321\n`;
+  content += `• SEEDS 信箱: seeds@seeds.is\n\n`;
+
+  content += `🗺️ 【精簡每日行程快照】\n`;
+  content += `--------------------------------------------------\n`;
+  
+  const phases = ['abu', 'nl', 'ice', 'paris', 'abu2'];
+  phases.forEach(phaseId => {
+    const list = document.getElementById('ph-' + phaseId);
+    if (!list) return;
+    content += `\n=== 地區：${phaseId.toUpperCase()} ===\n`;
+    list.querySelectorAll('.day-card').forEach(card => {
+      const dateText = card.querySelector('.day-date')?.textContent || '';
+      const titleText = card.querySelector('.day-title')?.textContent || '';
+      const badgeText = card.querySelector('.day-badge')?.textContent || '';
+      content += `\n📍 [${badgeText}] ${dateText} ${titleText}\n`;
+      
+      card.querySelectorAll('.item, .dead-bar').forEach(item => {
+        const time = item.querySelector('.item-time, .dead-time')?.textContent || '';
+        let name = item.querySelector('.item-name, .dead-text')?.textContent || '';
+        let note = item.querySelector('.item-note, .dead-note')?.textContent || '';
+        name = name.replace(/\s+/g, ' ').trim();
+        note = note.replace(/\s+/g, ' ').trim();
+        content += `  - [${time}] ${name}${note ? ' (' + note + ')' : ''}\n`;
+      });
+    });
+  });
+
+  content += `\n==================================================\n`;
+  content += `備份導出時間：${new Date().toLocaleString()}\n`;
+  content += `預祝您旅途平安愉快！✈️📷✨\n`;
+  content += `==================================================\n`;
+
+  const blob = new Blob([content], { type: 'text/plain;charset=utf-8' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'milutrip2026_offline_backup.txt';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
 
 // Initializations
