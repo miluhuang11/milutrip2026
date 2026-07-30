@@ -123,7 +123,9 @@ body {
 
 .hero {
   padding: 24px 20px 18px;
-  border-bottom: 1px solid var(--border);
+  background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=80') no-repeat center center;
+  background-size: cover;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   position: relative;
 }
 
@@ -132,14 +134,14 @@ body {
   font-weight: 700;
   letter-spacing: .15em;
   text-transform: uppercase;
-  color: var(--text3);
+  color: rgba(255, 255, 255, 0.85);
   margin-bottom: 6px;
 }
 
 .hero-title {
   font-size: 24px;
   font-weight: 700;
-  color: var(--text);
+  color: #ffffff;
   line-height: 1.2;
   margin-bottom: 4px;
 }
@@ -147,25 +149,26 @@ body {
 .hero-sub {
   font-size: 13px;
   font-weight: 500;
-  color: var(--text2);
+  color: rgba(255, 255, 255, 0.7);
 }
 
 /* Countdown Widget */
 .countdown-widget {
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.35);
   border-radius: 12px;
   padding: 8px 12px;
   margin-top: 12px;
-  border: 1px solid var(--border);
-  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
   align-items: center;
-  box-shadow: var(--card-shadow);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 .countdown-label {
   font-size: 9px;
-  color: var(--text2);
+  color: rgba(255, 255, 255, 0.8);
   font-weight: 600;
   margin-bottom: 4px;
   letter-spacing: 0.05em;
@@ -176,7 +179,7 @@ body {
 .countdown-timer {
   font-size: 13px;
   font-weight: 700;
-  color: var(--text);
+  color: #ffffff;
   display: flex;
   align-items: baseline;
   gap: 1px;
@@ -184,13 +187,14 @@ body {
 .countdown-timer span {
   font-family: 'Outfit', monospace;
   font-size: 16px;
-  color: var(--primary);
+  color: #ffffff;
   margin: 0 1px;
   font-weight: 700;
+  text-shadow: 0 0 10px rgba(255,255,255,0.2);
 }
 .countdown-timer small {
   font-size: 9px;
-  color: var(--text2);
+  color: rgba(255, 255, 255, 0.7);
   margin-right: 4px;
   font-weight: 500;
 }
@@ -546,13 +550,13 @@ body {
 /* Todo Tab styling */
 .todo-progress-container {
   width: 100%;
-  background: rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.2);
   height: 18px;
   border-radius: 9px;
   margin-top: 12px;
   overflow: hidden;
   position: relative;
-  border: 1px solid var(--border);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   backdrop-filter: blur(5px);
 }
 .todo-progress-bar {
@@ -572,7 +576,7 @@ body {
   justify-content: center;
   font-size: 9px;
   font-weight: 700;
-  color: var(--text);
+  color: #ffffff;
 }
 
 .todo-card {
