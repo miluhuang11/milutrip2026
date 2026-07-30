@@ -902,7 +902,7 @@ body {
 <div class="app">
   <!-- 行程分頁 -->
   <div id="tab-trip" class="panel on">
-    <div class="hero">
+    <div class="hero" id="trip-hero">
       <div class="hero-eyebrow">MILU · 2026 攝影之旅</div>
       <div class="hero-title">20 天跨國旅行</div>
       <div class="hero-sub">阿布達比 · 荷蘭 · 冰島 · 巴黎</div>
@@ -2053,6 +2053,14 @@ const themeMap = {
   abu2: 'abu'
 };
 
+const heroPhotos = {
+  abu: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Sheikh_Zayed_Grand_Mosque_-_Abu_Dhabi_%2834371981504%29.jpg/1280px-Sheikh_Zayed_Grand_Mosque_-_Abu_Dhabi_%2834371981504%29.jpg",
+  nl: "https://upload.wikimedia.org/wikipedia/commons/thumb/c/ca/Amsterdam_-_Canals_-_006830.jpg/1280px-Amsterdam_-_Canals_-_006830.jpg",
+  ice: "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e0/Kirkjufell_morning.jpg/1280px-Kirkjufell_morning.jpg",
+  paris: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/af/Paris_-_Eiffel_Tower_from_the_Port_Debilly.jpg/1280px-Paris_-_Eiffel_Tower_from_the_Port_Debilly.jpg",
+  abu2: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Sheikh_Zayed_Grand_Mosque_-_Abu_Dhabi_%2834371981504%29.jpg/1280px-Sheikh_Zayed_Grand_Mosque_-_Abu_Dhabi_%2834371981504%29.jpg"
+};
+
 function showPhase(id){
   phases.forEach(p=>{
     const el=document.getElementById('ph-'+p);
@@ -2068,6 +2076,12 @@ function showPhase(id){
 
   // Automatically load the first day of the selected phase
   showDayCard(id, 0);
+
+  // Dynamically update the trip hero banner background image based on selected country
+  const tripHero = document.getElementById('trip-hero');
+  if (tripHero && heroPhotos[id]) {
+    tripHero.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.6)), url('${heroPhotos[id]}')`;
+  }
 }
 
 function showDayCard(phaseId, index) {
