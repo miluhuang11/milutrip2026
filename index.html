@@ -3,9 +3,28 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#d97706">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MILU 2026 攝影之旅</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;700&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✈️</text></svg>">
+
+<!-- 效能：提前建立外部資源連線 -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
+
+<!-- 效能：預先載入首屏 Hero 背景圖（LCP 元素） -->
+<link rel="preload" as="image" fetchpriority="high" href="https://images.unsplash.com/photo-1544984243-ec57ea16fe25?auto=format&fit=crop&w=800&q=60">
+
+<!-- 效能：字體只載入實際用到的字重，並用 swap 避免擋住渲染 -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- 效能：Tabler 圖示字型非渲染阻塞載入（先用 print media 偷跑，載完再切回 all） -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"></noscript>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:'Outfit', 'Inter', 'Noto Sans TC', sans-serif;scroll-behavior: smooth;}
@@ -563,7 +582,10 @@ body {
   backdrop-filter: blur(5px);
 }
 .todo-progress-bar {
-  background: #137333;
+  /* 流光動畫漸層（取代純色 #137333，效果見下方 progressShine） */
+  background: linear-gradient(90deg, #137333 0%, #1bc762 50%, #137333 100%);
+  background-size: 200% 100%;
+  animation: progressShine 3s linear infinite;
   height: 100%;
   width: 0%;
   transition: width 0.4s ease;
@@ -789,12 +811,6 @@ body {
   cursor: pointer;
 }
 
-/* Progress Bar流光動畫 */
-.todo-progress-bar {
-  background: linear-gradient(90deg, #137333 0%, #1bc762 50%, #137333 100%) !important;
-  background-size: 200% 100% !important;
-  animation: progressShine 3s linear infinite !important;
-}
 @keyframes progressShine {
   0% { background-position: 0% 0%; }
   100% { background-position: -200% 0%; }
@@ -923,11 +939,11 @@ body {
     </div>
     
     <div class="phase-pills">
-      <div class="pill on" id="pill-abu" onclick="showPhase('abu')">🕌 阿布達比①</div>
-      <div class="pill" id="pill-nl" onclick="showPhase('nl')">🇳🇱 荷蘭</div>
-      <div class="pill" id="pill-ice" onclick="showPhase('ice')">🇮🇸 冰島</div>
-      <div class="pill" id="pill-paris" onclick="showPhase('paris')">🇫🇷 巴黎</div>
-      <div class="pill" id="pill-abu2" onclick="showPhase('abu2')">🕌 阿布達比②</div>
+      <div class="pill on" id="pill-abu" role="button" tabindex="0" onclick="showPhase('abu')">🕌 阿布達比①</div>
+      <div class="pill" id="pill-nl" role="button" tabindex="0" onclick="showPhase('nl')">🇳🇱 荷蘭</div>
+      <div class="pill" id="pill-ice" role="button" tabindex="0" onclick="showPhase('ice')">🇮🇸 冰島</div>
+      <div class="pill" id="pill-paris" role="button" tabindex="0" onclick="showPhase('paris')">🇫🇷 巴黎</div>
+      <div class="pill" id="pill-abu2" role="button" tabindex="0" onclick="showPhase('abu2')">🕌 阿布達比②</div>
     </div>
 
     <!-- 搜尋欄 -->
@@ -1000,6 +1016,12 @@ body {
             <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
           </div>
         </div>
+        <div class="item">
+          <div class="item-time">10:15</div>
+          <div class="item-body">
+            <div class="item-name">🚕 計程車前往 Etihad Towers（約 15 分鐘）</div>
+          </div>
+        </div>
         <div class="item" onclick="gm('Etihad+Towers+Observation+Deck+at+300')">
           <div class="item-time">10:30</div>
           <div class="item-body">
@@ -1019,8 +1041,8 @@ body {
         <div class="dead-bar">
           <div class="dead-time">11:40</div>
           <div>
-            <div class="dead-text">⚠ 最晚完成登機</div>
-            <div class="dead-note">EY041 14:10 起飛，提前 2.5 小時</div>
+            <div class="dead-text">⚠ 最晚抵達機場櫃檯</div>
+            <div class="dead-note">EY041 14:10 起飛，提前 2.5 小時；Corniche 只是回程順路看一眼，別久留</div>
           </div>
         </div>
         <div class="item">
@@ -1033,6 +1055,7 @@ body {
           <div class="item-time">18:35</div>
           <div class="item-body">
             <div class="item-name"><span class="badge badge-blue">抵達</span>🏨 史基浦 AMS → 前往 Conscious Hotel check-in</div>
+            <div class="item-note">🚆 機場火車到 Amsterdam Centraal（約 20 分鐘）→ 🚋 轉電車到飯店（約 15 分鐘）</div>
             <div class="item-map"><i class="ti ti-map-pin"></i> Schiphol Airport</div>
           </div>
         </div>
@@ -1166,6 +1189,12 @@ body {
             <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
           </div>
         </div>
+        <div class="item">
+          <div class="item-time">15:10</div>
+          <div class="item-body">
+            <div class="item-name">🚌 公車前往 Royal Delft 瓷器工廠（約 15 分鐘，走路約 25 分鐘）</div>
+          </div>
+        </div>
         <div class="item" onclick="gm('Royal+Delft+Museum')">
           <div class="item-time">15:30</div>
           <div class="item-body">
@@ -1207,6 +1236,7 @@ body {
           <div class="item-time">10:15</div>
           <div class="item-body">
             <div class="item-name">💼 回飯店取行李 → 前往機場</div>
+            <div class="item-note">🚆 市區搭火車到史基浦機場，約 15-20 分鐘</div>
           </div>
         </div>
         <div class="dead-bar">
@@ -1229,23 +1259,24 @@ body {
           </div>
         </div>
         <div class="item" onclick="gm('Blue+Lagoon+Iceland')">
-          <div class="item-time">18:00</div>
+          <div class="item-time">16:30</div>
           <div class="item-body">
-            <div class="item-name"><span class="badge badge-teal">體驗</span>♨️ 藍湖溫泉 Comfort 18:00（待訂）</div>
-            <div class="item-note">夜晚泡溫泉，奶藍色水面，可能有極光 🌌 泡約 2 小時。行李可寄放停車場（1000 ISK/件）</div>
+            <div class="item-name"><span class="badge badge-teal">體驗</span>♨️ 藍湖溫泉 Comfort 16:30（待訂）</div>
+            <div class="item-note">原規劃 18:00 場次落地後會空等近 2 小時，改訂 16:30（落地 + 通關 + Uber 後留 40 分鐘緩衝），傍晚泡溫泉、奶藍色水面 🌊 泡約 2 小時，18:30 左右結束，換裝後接 19:00 接駁車，時間更從容。行李可寄放停車場（1000 ISK/件）</div>
             <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
           </div>
         </div>
         <div class="item">
-          <div class="item-time">20:15</div>
+          <div class="item-time">19:00</div>
           <div class="item-body">
             <div class="item-name">🚌 官方接駁車回雷克雅維克 (45 分鐘)</div>
           </div>
         </div>
         <div class="item" onclick="gm('Kex+Hostel+Reykjavik')">
-          <div class="item-time">21:00</div>
+          <div class="item-time">19:45</div>
           <div class="item-body">
             <div class="item-name"><span class="badge badge-pink">入住</span>🏨 Kex Hostel 女性 6 人宿舍 Check-in</div>
+            <div class="item-note">接駁車終點在 BSÍ 巴士總站，到 Kex Hostel 還要走路約 15 分鐘或搭計程車約 5 分鐘（行李多建議計程車）</div>
             <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
           </div>
         </div>
@@ -1370,7 +1401,7 @@ body {
           <div class="item-time">中午</div>
           <div class="item-body">
             <div class="item-name"><span class="badge badge-orange">午餐</span>🍽️ Grandi Mathöll 食物大廳</div>
-            <div class="item-note">港口區室內美食廣場，龍蝦湯、魚塔可</div>
+            <div class="item-note">🚕 從市區搭計程車約 10 分鐘（步行約 25 分鐘）。港口區室內美食廣場，龍蝦湯、魚塔可</div>
             <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
           </div>
         </div>
@@ -1441,13 +1472,14 @@ body {
           <div class="item-time">11:30</div>
           <div class="item-body">
             <div class="item-name"><span class="badge badge-blue">抵達</span>🚉 抵達 CDG，RER B 進市區</div>
+            <div class="item-note">RER B 到 Châtelet–Les Halles（約 35-40 分鐘）→ 轉地鐵到瑪黑區（約 10 分鐘）</div>
           </div>
         </div>
         <div class="item" onclick="gm('Hotel+de+Roubaix+Paris')">
           <div class="item-time">13:00</div>
           <div class="item-body">
             <div class="item-name"><span class="badge badge-pink">入住</span>🏨 Hôtel de Roubaix</div>
-            <div class="item-note">3 區 Marais 旁，已預訂 1 晚</div>
+            <div class="item-note">3 區 Marais 旁，已預訂 2 晚（11/10、11/11）。11/11 晚上直接飛阿布達比，第 2 晚不會過夜，但房間留著到出發前，行李可以放心留在房裡不用提早整理</div>
             <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
           </div>
         </div>
@@ -1465,6 +1497,12 @@ body {
             <div class="item-name"><span class="badge badge-green">景點</span>🌊 Canal Saint-Martin 運河散步</div>
             <div class="item-note">散步體驗巴黎左岸運河的文青氛圍 🌲</div>
             <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="item-time">15:40</div>
+          <div class="item-body">
+            <div class="item-name">🚇 地鐵前往拉法葉百貨/歌劇院區（約 15 分鐘）</div>
           </div>
         </div>
         <div class="item" onclick="gm('Galeries+Lafayette+Paris')">
@@ -1491,6 +1529,12 @@ body {
             <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
           </div>
         </div>
+        <div class="item">
+          <div class="item-time">18:10</div>
+          <div class="item-body">
+            <div class="item-name">🚇 地鐵前往 Rue Cler（約 15 分鐘）</div>
+          </div>
+        </div>
         <div class="item" onclick="gm('Cafe+du+Marche+Rue+Cler+Paris')">
           <div class="item-time">18:30</div>
           <div class="item-body">
@@ -1514,12 +1558,25 @@ body {
           <div><div class="day-date">11/11 (三)</div><div class="day-title">整天巴黎 → 晚上起飛</div></div>
           <div class="day-badge">Day 17</div>
         </div>
+        <div class="item">
+          <div class="item-time">06:25</div>
+          <div class="item-body">
+            <div class="item-name">🚇 地鐵前往戰神廣場/耶拿橋（約 25-30 分鐘）</div>
+            <div class="item-note">巴黎地鐵約 05:30 首班車，時間足夠</div>
+          </div>
+        </div>
         <div class="item" onclick="gm('Port+Debilly+Paris')">
           <div class="item-time">07:00</div>
           <div class="item-body">
             <div class="item-name"><span class="badge badge-green">景點</span>📸 耶拿橋河岸清晨日出與散步</div>
             <div class="item-note">漫步塞納河畔耶拿橋旁的德比利港河岸 (Port Debilly)，在清晨晨光下拍攝無人鐵塔日出 🌅🗼 (日出約 07:50)</div>
             <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
+          </div>
+        </div>
+        <div class="item">
+          <div class="item-time">07:45</div>
+          <div class="item-body">
+            <div class="item-name">🚇 地鐵前往蒙馬特（約 30 分鐘，需轉乘一次）</div>
           </div>
         </div>
         <div class="item" onclick="gm('KB+Cafe+Shop+Paris')">
@@ -1559,6 +1616,12 @@ body {
             <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
           </div>
         </div>
+        <div class="item">
+          <div class="item-time">10:30</div>
+          <div class="item-body">
+            <div class="item-name">🚇 地鐵前往西堤島/聖禮拜堂（約 25-30 分鐘）</div>
+          </div>
+        </div>
         <div class="item" onclick="gm('Sainte-Chapelle+Paris')">
           <div class="item-time">11:00</div>
           <div class="item-body">
@@ -1591,6 +1654,12 @@ body {
             <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
           </div>
         </div>
+        <div class="item">
+          <div class="item-time">14:15</div>
+          <div class="item-body">
+            <div class="item-name">🚇 地鐵前往萬神殿（約 12-15 分鐘）</div>
+          </div>
+        </div>
         <div class="item" onclick="gm('Pantheon+Paris')">
           <div class="item-time">14:30</div>
           <div class="item-body">
@@ -1607,10 +1676,16 @@ body {
             <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
           </div>
         </div>
-        <div class="item" onclick="gm('Le+Marais+Paris')">
+        <div class="item">
           <div class="item-time">15:00</div>
           <div class="item-body">
-            <div class="item-name"><span class="badge badge-green">景點</span>🛍️ 瑪黑區逛逛 (15:00–16:30)</div>
+            <div class="item-name">🚇 地鐵前往瑪黑區（約 15 分鐘）</div>
+          </div>
+        </div>
+        <div class="item" onclick="gm('Le+Marais+Paris')">
+          <div class="item-time">15:15</div>
+          <div class="item-body">
+            <div class="item-name"><span class="badge badge-green">景點</span>🛍️ 瑪黑區逛逛 (15:15–16:30)</div>
             <div class="item-note">
               🛍️ 瑪黑區推薦逛街地圖：<br/>
               • <strong>Pierre Hermé</strong> — 馬卡龍（比 Ladurée 更厲害）🧁<br/>
@@ -1620,6 +1695,14 @@ body {
               • <strong>Fringe</strong> — 精品咖啡外帶（3區，住宿附近）☕<br/>
               • <strong>Tout Autour du Pain</strong> — 飯店附近麵包店（隨時可去）🥖
             </div>
+            <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
+          </div>
+        </div>
+        <div class="item" onclick="gm('Hotel+de+Roubaix+Paris')">
+          <div class="item-time">16:30</div>
+          <div class="item-body">
+            <div class="item-name"><span class="badge badge-pink">取行李</span>🎒 回 Hôtel de Roubaix 拿行李</div>
+            <div class="item-note">訂了 2 晚，不用趕著中午退房，逛完瑪黑區順路回房間拿行李即可，飯店就在附近</div>
             <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
           </div>
         </div>
@@ -1633,7 +1716,7 @@ body {
         <div class="dead-bar">
           <div class="dead-time">18:15</div>
           <div>
-            <div class="dead-text">⚠ 最晚完成登機</div>
+            <div class="dead-text">⚠ 最晚抵達機場櫃檯</div>
             <div class="dead-note">EY034 21:15 起飛，提前 3 小時抵達櫃檯</div>
           </div>
         </div>
@@ -1836,7 +1919,7 @@ body {
             <tr class="todo-row" data-id="blue-ticket" onclick="clickTodoRow('blue-ticket')">
               <td class="todo-cell-name">藍湖溫泉票</td>
               <td><strong>儘快</strong></td>
-              <td>bluelagoon.com 18:00 Comfort</td>
+              <td>bluelagoon.com 16:30 Comfort</td>
               <td style="text-align: center;"><div class="todo-cb"></div></td>
             </tr>
             <tr class="todo-row" data-id="insurance" onclick="clickTodoRow('insurance')">
@@ -1944,8 +2027,8 @@ body {
             <tr>
               <td>巴黎</td>
               <td><strong>Hôtel de Roubaix</strong></td>
-              <td>11/10 - 11/11</td>
-              <td>1晚</td>
+              <td>11/10 - 11/12</td>
+              <td>2晚<br><span style="font-size:10px;color:var(--text3)">11/11 晚上不過夜</span></td>
               <td><span class="status-badge ok">✓ 已訂</span></td>
             </tr>
             <tr>
@@ -1997,11 +2080,11 @@ body {
 
   <!-- 底部導覽 -->
   <div class="bnav">
-    <div class="bnav-item on" id="nav-trip" onclick="showTab('trip')">
+    <div class="bnav-item on" id="nav-trip" role="button" tabindex="0" onclick="showTab('trip')">
       <i class="ti ti-map-2"></i><span class="bnav-label">行程</span></div>
-    <div class="bnav-item" id="nav-todo" onclick="showTab('todo')">
+    <div class="bnav-item" id="nav-todo" role="button" tabindex="0" onclick="showTab('todo')">
       <i class="ti ti-checklist"></i><span class="bnav-label">待辦</span></div>
-    <div class="bnav-item" id="nav-info" onclick="showTab('info')">
+    <div class="bnav-item" id="nav-info" role="button" tabindex="0" onclick="showTab('info')">
       <i class="ti ti-info-circle"></i><span class="bnav-label">資訊</span></div>
   </div>
 </div>
@@ -2026,6 +2109,15 @@ body {
 
 <script>
 function gm(q){ window.open('https://maps.google.com/?q='+q,'_blank') }
+
+// 無障礙：讓 role="button" 的 div（pill / bnav-item）可以用鍵盤 Enter/Space 觸發
+document.addEventListener('keydown', function(e){
+  if (e.key !== 'Enter' && e.key !== ' ') return;
+  const el = e.target.closest('[role="button"]');
+  if (!el) return;
+  e.preventDefault();
+  el.click();
+});
 
 const EDIT_PIN = "1106";
 const UNLOCK_KEY = "milu_trip_unlocked";
@@ -2140,42 +2232,20 @@ function loadTodoState() {
     }
   });
   
-  // Set UI elements
-  // Table Rows
-  document.querySelectorAll('.todo-row').forEach(row => {
-    const id = row.getAttribute('data-id');
+  // Set UI elements（表格列 .todo-row 與清單項 .todo-item 邏輯相同，合併處理避免重複）
+  document.querySelectorAll('.todo-row, .todo-item').forEach(el => {
+    const id = el.getAttribute('data-id');
     const isDone = !!state[id];
-    const cb = row.querySelector('.todo-cb');
-    if (isDone) {
-      row.classList.add('completed');
-      cb.classList.add('done');
-      cb.textContent = '✓';
-    } else {
-      row.classList.remove('completed');
-      cb.classList.remove('done');
-      cb.textContent = '';
-    }
+    const doneClass = el.classList.contains('todo-row') ? 'completed' : 'done-item';
+    const cb = el.querySelector('.todo-cb');
+    const txt = el.querySelector('.todo-text'); // 表格列沒有這個元素，會是 null
+
+    el.classList.toggle(doneClass, isDone);
+    cb.classList.toggle('done', isDone);
+    cb.textContent = isDone ? '✓' : '';
+    if (txt) txt.classList.toggle('done', isDone);
   });
 
-  // Regular items
-  document.querySelectorAll('.todo-item').forEach(item => {
-    const id = item.getAttribute('data-id');
-    const isDone = !!state[id];
-    const cb = item.querySelector('.todo-cb');
-    const txt = item.querySelector('.todo-text');
-    if (isDone) {
-      item.classList.add('done-item');
-      cb.classList.add('done');
-      cb.textContent = '✓';
-      txt.classList.add('done');
-    } else {
-      item.classList.remove('done-item');
-      cb.classList.remove('done');
-      cb.textContent = '';
-      txt.classList.remove('done');
-    }
-  });
-  
   updateTodoProgress();
 }
 
@@ -2361,7 +2431,7 @@ function downloadOfflineBackup() {
   content += `• 阿姆斯特丹 (10/27 - 10/30, 3晚) - Conscious Hotel The Tire Station (已訂)\n`;
   content += `• 雷克雅維克 (10/30 - 10/31, 1晚) - Kex Hostel 女性 6 人宿舍 (已訂)\n`;
   content += `• 雷克雅維克 (11/09 - 11/10, 1晚) - Kex Hostel 女性 6 人宿舍 (已訂)\n`;
-  content += `• 巴黎 (11/10 - 11/11, 1晚) - Hôtel de Roubaix (已訂)\n`;
+  content += `• 巴黎 (11/10 - 11/12, 2晚，11/11晚上直接飛阿布達比不過夜) - Hôtel de Roubaix (已訂)\n`;
   content += `• SEEDS 志工期間 (10/31 - 11/09, 10晚) - 營隊安排住宿 (含全素食)\n\n`;
 
   content += `✈️ 【機票與航班】\n`;
@@ -2419,8 +2489,21 @@ function downloadOfflineBackup() {
 }
 
 // Initializations
-setInterval(updateCountdown, 1000);
-updateCountdown();
+// 效能：分頁切到背景時暫停倒數計時器，避免手機在口袋裡也持續耗電運算
+let countdownTimer = null;
+function startCountdown() {
+  if (countdownTimer) return;
+  updateCountdown();
+  countdownTimer = setInterval(updateCountdown, 1000);
+}
+function stopCountdown() {
+  clearInterval(countdownTimer);
+  countdownTimer = null;
+}
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) stopCountdown(); else startCountdown();
+});
+startCountdown();
 showPhase('abu'); // Init theme & active phase
 loadTodoState(); // Init checkboxes
 </script>
