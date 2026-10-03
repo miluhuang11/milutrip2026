@@ -952,6 +952,7 @@ body {
       <input type="text" id="trip-search" placeholder="搜尋景點、時間、備註、美食..." oninput="filterTrip()" />
       <button id="search-clear" onclick="clearSearch()" style="display:none;">&times;</button>
     </div>
+    <div id="search-empty" style="display:none; margin:24px 16px; text-align:center; font-size:12px; color:var(--text2);">找不到符合的行程</div>
 
     <!-- ABU 1 -->
     <div class="day-list" id="ph-abu">
@@ -1066,7 +1067,7 @@ body {
     <div class="day-list" id="ph-nl" style="display:none;">
       <!-- 氣象與時差條 -->
       <div class="info-bar">
-        <div class="info-bar-left">⏰ 時差：比台灣慢 6 / 7 小時</div>
+        <div class="info-bar-left">⏰ 時差：比台灣慢 7 小時</div>
         <div class="info-bar-right">
           <a class="btn-weather" href="https://www.google.com/search?q=Netherlands+weather" target="_blank">
             <i class="ti ti-cloud-rain"></i> 氣象查詢
@@ -2118,6 +2119,12 @@ function requireUnlock() {
 }
 
 const phases=['abu','nl','ice','paris','abu2'];
+
+// 旅程起訖日（以裝置當地日期計算）
+const TRIP_YEAR = 2026;
+const TRIP_START = new Date(TRIP_YEAR, 9, 26);
+const TRIP_END = new Date(TRIP_YEAR, 10, 13);
+const TRIP_DAYS = Math.round((TRIP_END - TRIP_START) / 86400000) + 1;
 // Define active tab accent colors dynamically for body class
 const themeMap = {
   abu: 'abu',
@@ -2136,6 +2143,10 @@ const heroPhotos = {
 };
 
 function showPhase(id){
+  // 切換地區時先結束搜尋，避免搜尋結果和地區分頁的顯示狀態互相打架
+  const searchInput = document.getElementById('trip-search');
+  if (searchInput && searchInput.value) clearSearch();
+
   phases.forEach(p=>{
     const el=document.getElementById('ph-'+p);
     if(el) el.style.display = p===id ? 'block' : 'none';
@@ -2309,7 +2320,18 @@ function updateCountdown() {
   
   if (diff <= 0) {
     const widget = document.getElementById('countdown-widget');
-    if (widget) widget.innerHTML = '<div class="countdown-label">🎉 我們的旅程已經起飛出發囉！</div>';
+    if (widget) {
+      // 出發後改顯示「旅程第幾天」
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const dayNo = Math.round((today - TRIP_START) / 86400000) + 1;
+      const label = today > TRIP_END
+        ? '🏠 旅程圓滿結束，歡迎回家！'
+        : `🎉 旅程第 ${Math.max(1, dayNo)} 天 / 共 ${TRIP_DAYS} 天`;
+      if (widget.dataset.label !== label) {
+        widget.dataset.label = label;
+        widget.innerHTML = `<div class="countdown-label">${label}</div>`;
+      }
+    }
     return;
   }
   
@@ -2372,6 +2394,21 @@ function filterTrip() {
       card.style.display = 'none';
     }
   });
+
+  // 搜尋時跨所有地區顯示結果（其他地區的 day-list 平常是隱藏的，不打開就搜不到）；
+  // 清空後只顯示目前選取的地區
+  const currentPill = document.querySelector('.phase-pills .pill.on');
+  const currentPhaseId = currentPill ? currentPill.id.replace('pill-', '') : phases[0];
+  let anyMatch = false;
+  phases.forEach(p => {
+    const list = document.getElementById('ph-' + p);
+    if (!list) return;
+    const hasMatch = Array.from(list.querySelectorAll('.day-card')).some(c => c.style.display !== 'none');
+    if (hasMatch) anyMatch = true;
+    list.style.display = query ? (hasMatch ? 'block' : 'none') : (p === currentPhaseId ? 'block' : 'none');
+  });
+  const emptyEl = document.getElementById('search-empty');
+  if (emptyEl) emptyEl.style.display = (query && !anyMatch) ? 'block' : 'none';
 
   // 如果清空搜尋，恢復當前分頁的單日顯示狀態
   if (query === '') {
@@ -2482,8 +2519,39 @@ function stopCountdown() {
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) stopCountdown(); else startCountdown();
 });
+// 旅行期間開啟時，自動跳到「今天」所在的地區與日期；出發前或回國後維持第一天。
+// 日期直接讀每張 day-card 上的 .day-date 文字（例如「10/27 (二)」或「11/01–11/09」）
+function findTodayCard() {
+  const now = new Date();
+  if (now.getFullYear() !== TRIP_YEAR) return null;
+  const today = new Date(TRIP_YEAR, now.getMonth(), now.getDate()).getTime();
+  let best = null;
+  phases.forEach(phaseId => {
+    const list = document.getElementById('ph-' + phaseId);
+    if (!list) return;
+    list.querySelectorAll('.day-card').forEach((card, index) => {
+      const text = card.querySelector('.day-date')?.textContent || '';
+      const m = text.match(/(\d{1,2})\/(\d{1,2})(?:\s*[–-]\s*(\d{1,2})\/(\d{1,2}))?/);
+      if (!m) return;
+      const start = new Date(TRIP_YEAR, m[1] - 1, m[2]).getTime();
+      const end = m[3] ? new Date(TRIP_YEAR, m[3] - 1, m[4]).getTime() : start;
+      if (today < start || today > end) return;
+      // 同一天有多張卡片符合時（例如 11/09 同時落在營隊區間與單日卡），選範圍最小的那張
+      const span = end - start;
+      if (!best || span <= best.span) best = { phaseId, index, span };
+    });
+  });
+  return best;
+}
+
 startCountdown();
-showPhase('abu'); // Init theme & active phase
+const todayCard = findTodayCard();
+if (todayCard) {
+  showPhase(todayCard.phaseId);
+  showDayCard(todayCard.phaseId, todayCard.index);
+} else {
+  showPhase('abu'); // Init theme & active phase
+}
 loadTodoState(); // Init checkboxes
 </script>
 </body>
