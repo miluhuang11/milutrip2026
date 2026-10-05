@@ -1,6 +1,6 @@
 // Service worker：讓行程網站在沒有網路時也能開啟。
 // 修改網站內容後不需要動這個檔案；只有在更換下方清單裡的資源時，才把 CACHE 的版本號加一。
-const CACHE = 'milutrip-v3';
+const CACHE = 'milutrip-v4';
 
 // 網站本身的檔案
 const LOCAL_ASSETS = [
