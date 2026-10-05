@@ -17,10 +17,9 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="preconnect" href="https://images.unsplash.com" crossorigin>
 
 <!-- 效能：預先載入首屏 Hero 背景圖（LCP 元素） -->
-<link rel="preload" as="image" fetchpriority="high" href="https://images.unsplash.com/photo-1544984243-ec57ea16fe25?auto=format&fit=crop&w=800&q=60">
+<link rel="preload" as="image" fetchpriority="high" href="./images/abu.jpg">
 
 <!-- 字體：英數用系統內建的 Times，中文優先用系統內建的宋體（Apple 裝置），沒有才下載 Noto Serif TC -->
 <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
@@ -144,9 +143,17 @@ body {
 }
 
 .hero {
+  /* 橫幅照片用 --hero-img 指定，上面蓋一層由上到下加深的陰影讓白字看得清楚 */
+  --hero-img: url('./images/journey.jpg');
+  min-height: 210px;
   padding: 24px 20px 18px;
-  background: linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?auto=format&fit=crop&w=800&q=60&v=2') no-repeat center center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  background-image: linear-gradient(180deg, rgba(0,0,0,0.10) 0%, rgba(0,0,0,0.25) 45%, rgba(0,0,0,0.62) 100%), var(--hero-img);
   background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   position: relative;
 }
@@ -694,6 +701,67 @@ body {
   background: #14BDAC;
   border-color: #14BDAC;
 }
+
+/* 航班住宿分頁 */
+.bk-summary { display: flex; gap: 8px; margin: 14px 16px 0; }
+.bk-stat {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 6px;
+  text-align: center;
+  box-shadow: var(--card-shadow);
+}
+.bk-stat-num { font-size: 22px; font-weight: 700; color: var(--primary); line-height: 1.1; }
+.bk-stat-label { font-size: 11px; color: var(--text2); margin-top: 2px; }
+.bk-list { padding: 0 16px; }
+.bk-card {
+  margin-top: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+  overflow: hidden;
+}
+.bk-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+}
+.bk-date { font-weight: 700; color: var(--text); }
+.bk-tag { font-weight: 600; color: var(--text2); text-align: right; }
+.bk-route { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 10px; padding: 14px; }
+.bk-code { font-size: 28px; font-weight: 700; color: var(--text); letter-spacing: .03em; line-height: 1; }
+.bk-time { font-size: 17px; font-weight: 700; color: var(--primary); margin-top: 6px; }
+.bk-time small { font-size: 10px; font-weight: 700; color: #C0392B; margin-left: 3px; vertical-align: top; }
+.bk-place { font-size: 11px; color: var(--text2); margin-top: 2px; line-height: 1.3; }
+.bk-end { text-align: right; }
+.bk-mid { text-align: center; font-size: 11px; color: var(--text2); min-width: 78px; }
+.bk-mid i { display: block; font-size: 18px; color: var(--primary); margin-bottom: 4px; }
+.bk-mid::before, .bk-mid::after { content: ""; display: block; border-top: 1px dashed var(--text3); opacity: .6; }
+.bk-mid::before { margin-bottom: 6px; }
+.bk-mid::after { margin-top: 6px; }
+.bk-card.stay { border-left: 3px solid var(--primary); cursor: pointer; }
+.bk-card.stay:active { background: var(--surface2); }
+.bk-stay { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; }
+.bk-stay-body { flex: 1; min-width: 0; }
+.bk-stay-name { font-size: 15px; font-weight: 700; color: var(--text); line-height: 1.3; }
+.bk-stay-meta { font-size: 12px; color: var(--text2); margin-top: 3px; line-height: 1.5; }
+.bk-layover {
+  margin: 10px 0 0 20px;
+  padding: 4px 0 4px 14px;
+  border-left: 2px dashed var(--text3);
+  font-size: 12px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+.bk-layover strong { color: var(--text); }
+.bk-note { margin: 16px 20px 0; font-size: 11px; color: var(--text2); line-height: 1.6; text-align: center; }
 
 @keyframes progressShine {
   0% { background-position: 0% 0%; }
@@ -1797,6 +1865,126 @@ body {
     </div>
   </div>
 
+  <!-- 航班住宿分頁：所有航班與住宿依時間順序排列。訂位代號不放在公開網站上 -->
+  <div id="tab-book" class="panel" style="background:var(--bg);min-height:100vh;padding-bottom:80px">
+    <div class="hero" style="--hero-img: url('./images/flight.jpg')">
+      <div class="hero-eyebrow">FLIGHTS &amp; STAYS</div>
+      <div class="hero-title">航班與住宿</div>
+      <div class="hero-sub">10/26 出發 · 11/14 回到台北</div>
+    </div>
+
+    <div class="bk-summary">
+      <div class="bk-stat"><div class="bk-stat-num">6</div><div class="bk-stat-label">段航班</div></div>
+      <div class="bk-stat"><div class="bk-stat-num">16</div><div class="bk-stat-label">晚住宿</div></div>
+      <div class="bk-stat"><div class="bk-stat-num">3</div><div class="bk-stat-label">晚在機上</div></div>
+    </div>
+
+    <div class="bk-list">
+      <div class="bk-card">
+        <div class="bk-top"><span class="bk-date">10/26 (一)</span><span class="bk-tag">✈️ EY899 · 阿提哈德航空</span></div>
+        <div class="bk-route">
+          <div><div class="bk-code">TPE</div><div class="bk-time">18:40</div><div class="bk-place">桃園 第二航廈</div></div>
+          <div class="bk-mid"><i class="ti ti-plane"></i>9 小時 50 分</div>
+          <div class="bk-end"><div class="bk-code">AUH</div><div class="bk-time">00:30<small>+1 天</small></div><div class="bk-place">阿布達比 A 航廈</div></div>
+        </div>
+      </div>
+      <div class="bk-layover">⏱ 阿布達比轉機 <strong>13 小時 40 分</strong> · 出機場去清真寺，需要過境簽證</div>
+      <div class="bk-card">
+        <div class="bk-top"><span class="bk-date">10/27 (二)</span><span class="bk-tag">✈️ EY041 · 阿提哈德航空</span></div>
+        <div class="bk-route">
+          <div><div class="bk-code">AUH</div><div class="bk-time">14:10</div><div class="bk-place">阿布達比 A 航廈</div></div>
+          <div class="bk-mid"><i class="ti ti-plane"></i>7 小時 25 分</div>
+          <div class="bk-end"><div class="bk-code">AMS</div><div class="bk-time">18:35</div><div class="bk-place">阿姆斯特丹 史基浦</div></div>
+        </div>
+      </div>
+      <div class="bk-card stay" onclick="gm('Conscious+Hotel+Vondelpark+Amsterdam')">
+        <div class="bk-top"><span class="bk-date">🏨 阿姆斯特丹 · 3 晚</span><span class="status-badge ok">✓ 已訂</span></div>
+        <div class="bk-stay">
+          <div class="bk-stay-body">
+            <div class="bk-stay-name">Conscious Hotel Vondelpark</div>
+            <div class="bk-stay-meta">10/27 (二) 入住 → 10/30 (五) 退房<br>雙人床雙人房 · Overtoom 519</div>
+            <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
+          </div>
+        </div>
+      </div>
+      <div class="bk-card">
+        <div class="bk-top"><span class="bk-date">10/30 (五)</span><span class="bk-tag">✈️ FI501 · 冰島航空</span></div>
+        <div class="bk-route">
+          <div><div class="bk-code">AMS</div><div class="bk-time">12:55</div><div class="bk-place">阿姆斯特丹 史基浦</div></div>
+          <div class="bk-mid"><i class="ti ti-plane"></i>3 小時 25 分</div>
+          <div class="bk-end"><div class="bk-code">KEF</div><div class="bk-time">15:20</div><div class="bk-place">冰島 凱夫拉維克</div></div>
+        </div>
+      </div>
+      <div class="bk-card stay" onclick="gm('Kex+Hostel+Reykjavik')">
+        <div class="bk-top"><span class="bk-date">🏨 雷克雅維克 · 1 晚</span><span class="status-badge ok">✓ 已訂</span></div>
+        <div class="bk-stay">
+          <div class="bk-stay-body">
+            <div class="bk-stay-name">Kex Hostel</div>
+            <div class="bk-stay-meta">10/30 (五) 入住 → 10/31 (六) 退房<br>女性 6 人宿舍 · 退房 11:00，可寄放行李</div>
+            <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
+          </div>
+        </div>
+      </div>
+      <div class="bk-card stay" onclick="gm('Grettisgata+3+Reykjavik')">
+        <div class="bk-top"><span class="bk-date">⛺ SEEDS 營隊 · 9 晚</span><span class="status-badge ok">✓ 已含在費用內</span></div>
+        <div class="bk-stay">
+          <div class="bk-stay-body">
+            <div class="bk-stay-name">SEEDS 國際志工營隊</div>
+            <div class="bk-stay-meta">10/31 (六) 18:00 報到 → 11/09 (一) 中午解散<br>住宿與素食餐由營隊提供 · 報到地點 Grettisgata 3a</div>
+            <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
+          </div>
+        </div>
+      </div>
+      <div class="bk-card stay" onclick="gm('Kex+Hostel+Reykjavik')">
+        <div class="bk-top"><span class="bk-date">🏨 雷克雅維克 · 1 晚</span><span class="status-badge ok">✓ 已訂</span></div>
+        <div class="bk-stay">
+          <div class="bk-stay-body">
+            <div class="bk-stay-name">Kex Hostel</div>
+            <div class="bk-stay-meta">11/09 (一) 入住 → 11/10 (二) 凌晨 03:45 出發<br>女性 6 人宿舍</div>
+            <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
+          </div>
+        </div>
+      </div>
+      <div class="bk-card">
+        <div class="bk-top"><span class="bk-date">11/10 (二)</span><span class="bk-tag">✈️ FI542 · 冰島航空</span></div>
+        <div class="bk-route">
+          <div><div class="bk-code">KEF</div><div class="bk-time">07:30</div><div class="bk-place">冰島 凱夫拉維克</div></div>
+          <div class="bk-mid"><i class="ti ti-plane"></i>3 小時 30 分</div>
+          <div class="bk-end"><div class="bk-code">CDG</div><div class="bk-time">12:00</div><div class="bk-place">巴黎戴高樂 第一航廈</div></div>
+        </div>
+      </div>
+      <div class="bk-card stay" onclick="gm('Hotel+de+Roubaix+Paris')">
+        <div class="bk-top"><span class="bk-date">🏨 巴黎 · 2 晚</span><span class="status-badge ok">✓ 已訂</span></div>
+        <div class="bk-stay">
+          <div class="bk-stay-body">
+            <div class="bk-stay-name">Hôtel de Roubaix</div>
+            <div class="bk-stay-meta">11/10 (二) 入住 → 11/12 (四) 退房<br>3 區，Marais 旁</div>
+            <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
+          </div>
+        </div>
+      </div>
+      <div class="bk-card">
+        <div class="bk-top"><span class="bk-date">11/12 (四)</span><span class="bk-tag">✈️ EY034 · 阿提哈德航空</span></div>
+        <div class="bk-route">
+          <div><div class="bk-code">CDG</div><div class="bk-time">21:15</div><div class="bk-place">巴黎戴高樂 第一航廈</div></div>
+          <div class="bk-mid"><i class="ti ti-plane"></i>6 小時 30 分</div>
+          <div class="bk-end"><div class="bk-code">AUH</div><div class="bk-time">06:45<small>+1 天</small></div><div class="bk-place">阿布達比 A 航廈</div></div>
+        </div>
+      </div>
+      <div class="bk-layover">⏱ 阿布達比轉機 <strong>14 小時 5 分</strong> · 出機場去 Louvre Abu Dhabi，需要過境簽證</div>
+      <div class="bk-card">
+        <div class="bk-top"><span class="bk-date">11/13 (五)</span><span class="bk-tag">✈️ EY898 · 阿提哈德航空</span></div>
+        <div class="bk-route">
+          <div><div class="bk-code">AUH</div><div class="bk-time">20:50</div><div class="bk-place">阿布達比 A 航廈</div></div>
+          <div class="bk-mid"><i class="ti ti-plane"></i>8 小時 10 分</div>
+          <div class="bk-end"><div class="bk-code">TPE</div><div class="bk-time">09:00<small>+1 天</small></div><div class="bk-place">桃園 第二航廈</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bk-note">所有時間都是當地時間。<br>訂位代號沒有放在這個公開網站上，請存在手機備忘錄或航空公司 App。</div>
+  </div>
+
   <!-- 待辦分頁 -->
   <div id="tab-todo" class="panel" style="background:var(--bg);min-height:100vh;padding-bottom:80px">
     <div class="hero">
@@ -1982,71 +2170,6 @@ body {
       <i class="ti ti-download"></i> 💾 導出行程備份 (離線快照)
     </button>
     
-    <!-- 住宿資訊表格 -->
-    <div class="summary">
-      <div class="sum-title">住宿明細</div>
-      <div class="info-table-container">
-        <table class="info-table">
-          <thead>
-            <tr>
-              <th>城市</th>
-              <th>飯店</th>
-              <th>日期</th>
-              <th>晚數</th>
-              <th>狀態</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>阿姆斯特丹</td>
-              <td><strong>Conscious Hotel Vondelpark</strong></td>
-              <td>10/27 - 10/30</td>
-              <td>3晚</td>
-              <td><span class="status-badge ok">✓ 已訂</span></td>
-            </tr>
-            <tr>
-              <td>雷克雅維克</td>
-              <td><strong>Kex Hostel 女性 6 人宿舍</strong></td>
-              <td>10/30 - 10/31</td>
-              <td>1晚</td>
-              <td><span class="status-badge ok">✓ 已訂</span></td>
-            </tr>
-            <tr>
-              <td>雷克雅維克</td>
-              <td><strong>Kex Hostel 女性 6 人宿舍</strong></td>
-              <td>11/09 - 11/10</td>
-              <td>1晚</td>
-              <td><span class="status-badge ok">✓ 已訂</span></td>
-            </tr>
-            <tr>
-              <td>巴黎</td>
-              <td><strong>Hôtel de Roubaix</strong></td>
-              <td>11/10 - 11/12</td>
-              <td>2晚</td>
-              <td><span class="status-badge ok">✓ 已訂</span></td>
-            </tr>
-            <tr>
-              <td>SEEDS 期間</td>
-              <td>營隊住宿 (全素食)</td>
-              <td>10/31 - 11/09</td>
-              <td>10晚</td>
-              <td><span class="status-badge ok">✓ 已含在費用內</span></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-
-    <div class="summary">
-      <div class="sum-title">機票總覽</div>
-      <div class="sum-row"><span class="sum-label">EY899 台北 → AUH</span><span class="sum-val">10/26 18:40</span></div>
-      <div class="sum-row"><span class="sum-label">EY041 AUH → AMS</span><span class="sum-val">10/27 14:10</span></div>
-      <div class="sum-row"><span class="sum-label">FI501 AMS → KEF</span><span class="sum-val ok">10/30 12:55 ✓</span></div>
-      <div class="sum-row"><span class="sum-label">FI542 KEF → CDG</span><span class="sum-val ok">11/10 07:30 ✓</span></div>
-      <div class="sum-row"><span class="sum-label">EY034 CDG → AUH</span><span class="sum-val">11/12 21:15</span></div>
-      <div class="sum-row"><span class="sum-label">EY898 AUH → 台北</span><span class="sum-val">11/13 20:50</span></div>
-    </div>
-
     <div class="summary">
       <div class="sum-title">緊急聯絡</div>
       <div class="sum-row"><span class="sum-label">SEEDS 緊急</span><span class="sum-val">Oscar +354 7713300</span></div>
@@ -2069,12 +2192,16 @@ body {
       <div class="sum-row"><span class="sum-label">SEEDS WiFi</span><span class="sum-val warn">無！需預備 eSIM</span></div>
       <div class="sum-row"><span class="sum-label">相機規格</span><span class="sum-val">需可切換手動模式</span></div>
     </div>
+
+    <div class="bk-note">橫幅照片來自 Unsplash 的攝影師們。</div>
   </div>
 
   <!-- 底部導覽 -->
   <div class="bnav">
     <div class="bnav-item on" id="nav-trip" role="button" tabindex="0" onclick="showTab('trip')">
       <i class="ti ti-map-2"></i><span class="bnav-label">行程</span></div>
+    <div class="bnav-item" id="nav-book" role="button" tabindex="0" onclick="showTab('book')">
+      <i class="ti ti-plane"></i><span class="bnav-label">航班住宿</span></div>
     <div class="bnav-item" id="nav-todo" role="button" tabindex="0" onclick="showTab('todo')">
       <i class="ti ti-checklist"></i><span class="bnav-label">待辦</span></div>
     <div class="bnav-item" id="nav-info" role="button" tabindex="0" onclick="showTab('info')">
@@ -2139,11 +2266,11 @@ const themeMap = {
 };
 
 const heroPhotos = {
-  abu: "https://images.unsplash.com/photo-1544984243-ec57ea16fe25?auto=format&fit=crop&w=800&q=60",
-  nl: "https://images.unsplash.com/photo-1481437156560-3205f6a55735?auto=format&fit=crop&w=800&q=60",
-  ice: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=800&q=60",
-  paris: "https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=800&q=60",
-  abu2: "https://images.unsplash.com/photo-1544984243-ec57ea16fe25?auto=format&fit=crop&w=800&q=60"
+  abu: "./images/abu.jpg",
+  nl: "./images/nl.jpg",
+  ice: "./images/ice.jpg",
+  paris: "./images/paris.jpg",
+  abu2: "./images/abu2.jpg"
 };
 
 function showPhase(id){
@@ -2169,7 +2296,7 @@ function showPhase(id){
   // Dynamically update the trip hero banner background image based on selected country
   const tripHero = document.getElementById('trip-hero');
   if (tripHero && heroPhotos[id]) {
-    tripHero.style.backgroundImage = `linear-gradient(rgba(0,0,0,0.2), rgba(0,0,0,0.3)), url('${heroPhotos[id]}')`;
+    tripHero.style.setProperty('--hero-img', `url('${heroPhotos[id]}')`);
   }
 }
 
@@ -2193,14 +2320,15 @@ function showDayCard(phaseId, index) {
   }
 }
 
+const TABS = ['trip', 'book', 'todo', 'info'];
+
 function showTab(id){
-  document.getElementById('tab-trip').style.display = id==='trip'?'block':'none';
-  document.getElementById('tab-todo').style.display = id==='todo'?'block':'none';
-  document.getElementById('tab-info').style.display = id==='info'?'block':'none';
-  ['trip','todo','info'].forEach(t=>{
-    document.getElementById('nav-'+t).classList.toggle('on',t===id);
+  TABS.forEach(t => {
+    document.getElementById('tab-' + t).style.display = t === id ? 'block' : 'none';
+    document.getElementById('nav-' + t).classList.toggle('on', t === id);
   });
-  
+  window.scrollTo(0, 0);
+
   // If moving to todo, load state
   if (id === 'todo') {
     loadTodoState();
@@ -2425,7 +2553,7 @@ async function downloadOfflineBackup() {
   content += `• 雷克雅維克 (10/30 - 10/31, 1晚) - Kex Hostel 女性 6 人宿舍 (已訂)\n`;
   content += `• 雷克雅維克 (11/09 - 11/10, 1晚) - Kex Hostel 女性 6 人宿舍 (已訂)\n`;
   content += `• 巴黎 (11/10 - 11/12, 2晚) - Hôtel de Roubaix (已訂)\n`;
-  content += `• SEEDS 志工期間 (10/31 - 11/09, 10晚) - 營隊安排住宿 (含全素食)\n\n`;
+  content += `• SEEDS 志工期間 (10/31 - 11/09, 9晚) - 營隊安排住宿 (含全素食)\n\n`;
 
   content += `✈️ 【機票與航班】\n`;
   content += `--------------------------------------------------\n`;
