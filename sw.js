@@ -1,15 +1,15 @@
 // Service worker：讓行程網站在沒有網路時也能開啟。
 // 修改網站內容後不需要動這個檔案；只有在更換下方清單裡的資源時，才把 CACHE 的版本號加一。
-const CACHE = 'milutrip-v4';
+const CACHE = 'milutrip-v5';
 
 // 網站本身的檔案
 const LOCAL_ASSETS = [
   './',
   './index.html',
   './manifest.webmanifest',
-  './icons/icon-180.png',
-  './icons/icon-192.png',
-  './icons/icon-512.png',
+  './icons/icon-180-teal.png',
+  './icons/icon-192-teal.png',
+  './icons/icon-512-teal.png',
   './images/abu.jpg',
   './images/abu2.jpg',
   './images/nl.jpg',
