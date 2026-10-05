@@ -1,6 +1,6 @@
 // Service worker：讓行程網站在沒有網路時也能開啟。
 // 修改網站內容後不需要動這個檔案；只有在更換下方清單裡的資源時，才把 CACHE 的版本號加一。
-const CACHE = 'milutrip-v1';
+const CACHE = 'milutrip-v2';
 
 // 網站本身的檔案
 const LOCAL_ASSETS = [
@@ -15,8 +15,8 @@ const LOCAL_ASSETS = [
 // 圖示字型的樣式表（裡面引用的字型檔會在安裝時一併抓下來）
 const ICON_CSS = 'https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css';
 
-// 文字字型的樣式表。字型檔本身數量很多，改成用到時才存；離線時沒存到的會退回系統字型
-const FONT_CSS = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Outfit:wght@400;500;600;700&display=swap';
+// 中文襯線字型的樣式表（Apple 裝置有內建宋體，不會用到）。字型檔數量很多，用到時才存；離線時沒存到的會退回系統字型
+const FONT_CSS = 'https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap';
 
 // 各地區的橫幅照片
 const PHOTOS = [

@@ -22,15 +22,15 @@
 <!-- 效能：預先載入首屏 Hero 背景圖（LCP 元素） -->
 <link rel="preload" as="image" fetchpriority="high" href="https://images.unsplash.com/photo-1544984243-ec57ea16fe25?auto=format&fit=crop&w=800&q=60">
 
-<!-- 效能：字體只載入實際用到的字重，並用 swap 避免擋住渲染 -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- 字體：英數用系統內建的 Times，中文優先用系統內建的宋體（Apple 裝置），沒有才下載 Noto Serif TC -->
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&display=swap" rel="stylesheet">
 
 <!-- 效能：Tabler 圖示字型非渲染阻塞載入（先用 print media 偷跑，載完再切回 all） -->
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css"></noscript>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-html,body{height:100%;font-family:'Outfit', 'Inter', 'Noto Sans TC', sans-serif;scroll-behavior: smooth;}
+html,body{height:100%;font-family:'Times New Roman', Times, 'Songti TC', 'Noto Serif TC', 'PMingLiU', serif;scroll-behavior: smooth;}
 
 :root {
   --bg-gradient: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
@@ -210,7 +210,7 @@ body {
   gap: 1px;
 }
 .countdown-timer span {
-  font-family: 'Outfit', monospace;
+  font-family: inherit;
   font-size: 16px;
   color: #ffffff;
   margin: 0 1px;
@@ -384,7 +384,7 @@ body {
   min-width: 42px;
   padding-top: 2px;
   flex-shrink: 0;
-  font-family: 'Outfit', monospace;
+  font-family: inherit;
 }
 .item-body { flex: 1 }
 
@@ -451,7 +451,7 @@ body {
   font-weight: 700;
   flex-shrink: 0;
   padding-top: 1px;
-  font-family: 'Outfit', monospace;
+  font-family: inherit;
 }
 .dead-text {
   font-size: 12px;
@@ -693,152 +693,6 @@ body {
 .todo-cb.done {
   background: #14BDAC;
   border-color: #14BDAC;
-}
-
-/* Netherlands food widget */
-.nl-food-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--border-radius);
-  padding: 12px 14px;
-  margin-bottom: 12px;
-  box-shadow: var(--card-shadow);
-  backdrop-filter: blur(10px);
-}
-.nl-food-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text);
-  margin-bottom: 4px;
-}
-.nl-food-desc {
-  font-size: 11px;
-  color: var(--text2);
-  line-height: 1.4;
-  margin-bottom: 10px;
-}
-.nl-food-actions {
-  display: flex;
-  gap: 8px;
-}
-.btn-food-map, .btn-food-link {
-  flex: 1;
-  font-family: inherit;
-  font-size: 11px;
-  font-weight: 600;
-  padding: 8px 10px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  cursor: pointer;
-  transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-}
-.btn-food-map {
-  background: var(--primary-light);
-  color: var(--primary);
-  border-color: var(--primary-light);
-}
-.btn-food-link {
-  background: var(--surface-solid);
-  color: var(--text2);
-}
-
-/* Modal popup */
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
-  backdrop-filter: blur(4px);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-.modal-content {
-  background: var(--surface-solid);
-  border: 1px solid var(--border);
-  border-radius: var(--border-radius);
-  width: 100%;
-  max-width: 360px;
-  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-  overflow: hidden;
-  animation: modalShow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-}
-@keyframes modalShow {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
-}
-.modal-header {
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-.modal-header h3 {
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--text);
-  margin: 0;
-}
-.btn-close {
-  background: none;
-  border: none;
-  font-size: 22px;
-  cursor: pointer;
-  color: var(--text3);
-  padding: 0;
-  line-height: 1;
-}
-.modal-body {
-  padding: 16px;
-}
-.modal-body p {
-  font-size: 11px;
-  color: var(--text2);
-  line-height: 1.5;
-  margin-bottom: 10px;
-}
-.modal-body input {
-  width: 100%;
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid var(--border);
-  font-family: inherit;
-  font-size: 12px;
-  color: var(--text);
-  background: var(--bg);
-  outline: none;
-}
-.modal-tip {
-  font-size: 9px !important;
-  color: var(--text3) !important;
-  margin-top: 8px;
-  margin-bottom: 0 !important;
-}
-.modal-footer {
-  padding: 12px 16px;
-  border-top: 1px solid var(--border);
-  display: flex;
-  justify-content: flex-end;
-}
-.btn-save {
-  background: var(--primary);
-  color: #fff;
-  border: none;
-  padding: 6px 16px;
-  border-radius: 6px;
-  font-family: inherit;
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
 }
 
 @keyframes progressShine {
@@ -2228,24 +2082,6 @@ body {
   </div>
 </div>
 
-<!-- Modal 設定 Google Maps 連結 -->
-<div id="food-modal" class="modal-overlay" style="display:none;">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h3>🔗 連結 Google Maps 美食清單</h3>
-      <button onclick="closeFoodModal()" class="btn-close">&times;</button>
-    </div>
-    <div class="modal-body">
-      <p>請在 Google Maps 中複製您的「已儲存清單」分享連結，並貼在下方：</p>
-      <input type="text" id="food-map-url" placeholder="https://maps.app.goo.gl/..." />
-      <p class="modal-tip">儲存後，點擊「🗺️ 我的美食地圖」會直接開啟此連結。若清空則恢復預設搜尋。</p>
-    </div>
-    <div class="modal-footer">
-      <button onclick="saveFoodMapUrl()" class="btn-save">儲存設定</button>
-    </div>
-  </div>
-</div>
-
 <script>
 function gm(q){ window.open('https://maps.google.com/?q='+q,'_blank') }
 
@@ -2451,49 +2287,6 @@ async function toggleTodoId(id) {
 
 function clickTodoItem(id) {
   toggleTodoId(id);
-}
-
-/* Personal Google Maps URL list linkage */
-function openPersonalFoodMap() {
-  const url = localStorage.getItem('milutrip_food_map_url');
-  if (url && url.trim().startsWith('http')) {
-    window.open(url.trim(), '_blank');
-  } else {
-    alert('尚未連結個人美食地圖，將暫時為您開啟 Google Maps 荷蘭美食推薦搜尋。\n\n💡 提示：點選「🔗 連結清單」可以貼上您的專屬地圖分享網址！');
-    window.open('https://www.google.com/maps/search/?api=1&query=Netherlands+Amsterdam+Utrecht+best+restaurants+food', '_blank');
-  }
-}
-
-function setPersonalFoodMap() {
-  const modal = document.getElementById('food-modal');
-  const input = document.getElementById('food-map-url');
-  const url = localStorage.getItem('milutrip_food_map_url') || '';
-  if (input) input.value = url;
-  if (modal) modal.style.display = 'flex';
-}
-
-function closeFoodModal() {
-  const modal = document.getElementById('food-modal');
-  if (modal) modal.style.display = 'none';
-}
-
-async function saveFoodMapUrl() {
-  if (!(await requireUnlock())) return;
-  const input = document.getElementById('food-map-url');
-  if (input) {
-    const url = input.value.trim();
-    if (url === '') {
-      localStorage.removeItem('milutrip_food_map_url');
-      alert('已清除地圖連結。');
-    } else if (url.startsWith('http://') || url.startsWith('https://')) {
-      localStorage.setItem('milutrip_food_map_url', url);
-      alert('地圖連結儲存成功！');
-    } else {
-      alert('請輸入有效的網址（以 http:// 或 https:// 開頭）！');
-      return;
-    }
-  }
-  closeFoodModal();
 }
 
 /* Countdown Timer */
