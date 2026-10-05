@@ -8,6 +8,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>MILU 2026 攝影之旅</title>
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="apple-touch-icon" href="./icons/icon-180.png">
+<meta name="apple-mobile-web-app-title" content="MILU 2026">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✈️</text></svg>">
 
 <!-- 效能：提前建立外部資源連線 -->
@@ -23,8 +26,8 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <!-- 效能：Tabler 圖示字型非渲染阻塞載入（先用 print media 偷跑，載完再切回 all） -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" media="print" onload="this.media='all'">
-<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css"></noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.47.0/tabler-icons.min.css"></noscript>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;font-family:'Outfit', 'Inter', 'Noto Sans TC', sans-serif;scroll-behavior: smooth;}
@@ -643,6 +646,33 @@ body {
 .todo-item:active { background: var(--surface2) }
 .todo-item.done-item { opacity: 0.7 }
 .todo-text.done { text-decoration: line-through; color: var(--text3) }
+#todo-pending .todo-item:first-child,
+#todo-done .todo-item:first-child { border-top: none }
+.todo-main { flex: 1; min-width: 0 }
+.todo-text { font-size: 13px; font-weight: 500; color: var(--text); line-height: 1.4 }
+.todo-meta { font-size: 11px; color: var(--text2); margin-top: 2px; line-height: 1.4 }
+.todo-due { font-weight: 700 }
+.todo-item.overdue .todo-due { color: #C0392B }
+.todo-item.overdue .todo-due::after { content: " ⚠ 已過期" }
+.todo-item.done-item .todo-meta { display: none }
+.todo-empty { padding: 16px 14px; font-size: 12px; color: var(--text2); text-align: center }
+
+/* 行程中標示「現在」進行到哪一項 */
+.item.now, .dead-bar.now {
+  box-shadow: inset 3px 0 0 var(--primary);
+  background: var(--surface2);
+}
+.now-tag {
+  display: inline-block;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 7px;
+  border-radius: 20px;
+  background: var(--primary);
+  color: #fff;
+  margin-top: 4px;
+  white-space: nowrap;
+}
 
 .todo-cb {
   width: 18px;
@@ -1153,11 +1183,8 @@ body {
               <span class="badge badge-green">景點</span>🖼️ Mauritshuis 皇家美術館
               <span style="font-size:10px; color:#137333; font-weight:600; margin-left:4px;">☑ 已訂</span>
             </div>
-            <div class="item-note">戴珍珠耳環的少女在這！已訂（€21），請提前 10 分鐘到。</div>
+            <div class="item-note">戴珍珠耳環的少女在這！已訂（€21），請提前 10 分鐘到。門票 PDF 存在手機裡。</div>
             <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
-            <div class="item-actions" onclick="event.stopPropagation()">
-              <a class="btn-action btn-pdf" href="./海牙Mauritshuis TICKECTS.pdf" target="_blank"><i class="ti ti-paperclip"></i> 開啟已購門票 PDF</a>
-            </div>
           </div>
         </div>
         <div class="item" onclick="gm('Binnenhof+The+Hague')">
@@ -1860,99 +1887,106 @@ body {
       </div>
     </div>
     
+    <!-- 待辦項目：勾選後會自動移到「已完成」；未完成的依 data-due 期限排序，過期會標示。
+         data-due 填 YYYY-MM-DD，或填 asap 代表儘快 -->
     <div class="todo-card">
-      <div class="todo-hd">🔴 還沒做的重要事項：</div>
-      <div class="info-table-container">
-        <table class="info-table">
-          <thead>
-            <tr>
-              <th>待辦</th>
-              <th>時間</th>
-              <th>說明</th>
-              <th style="text-align: center;">狀態</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="todo-row" data-id="anne" onclick="clickTodoRow('anne')">
-              <td class="todo-cell-name">安妮之家門票</td>
-              <td><strong>9/15 (週二) 16:00 台灣時間</strong></td>
-              <td>準時搶票！</td>
-              <td style="text-align: center;"><div class="todo-cb"></div></td>
-            </tr>
-            <tr class="todo-row" data-id="mosque-reg" onclick="clickTodoRow('mosque-reg')">
-              <td class="todo-cell-name">謝赫扎耶德清真寺登記</td>
-              <td><strong>9月底</strong></td>
-              <td>grandmosque.ae</td>
-              <td style="text-align: center;"><div class="todo-cb"></div></td>
-            </tr>
-            <tr class="todo-row" data-id="louvre-ticket" onclick="clickTodoRow('louvre-ticket')">
-              <td class="todo-cell-name">Louvre Abu Dhabi</td>
-              <td><strong>10月初</strong></td>
-              <td>louvreabudhabi.ae</td>
-              <td style="text-align: center;"><div class="todo-cb"></div></td>
-            </tr>
-            <tr class="todo-row" data-id="sainte-ticket" onclick="clickTodoRow('sainte-ticket')">
-              <td class="todo-cell-name">Sainte-Chapelle 巴黎</td>
-              <td><strong>11月初</strong></td>
-              <td>sainte-chapelle.fr</td>
-              <td style="text-align: center;"><div class="todo-cb"></div></td>
-            </tr>
-            <tr class="todo-row" data-id="arc-ticket" onclick="clickTodoRow('arc-ticket')">
-              <td class="todo-cell-name">凱旋門登頂門票</td>
-              <td><strong>11月初</strong></td>
-              <td>paris-arc-de-triomphe.fr (建議預訂 17:30 登頂)</td>
-              <td style="text-align: center;"><div class="todo-cb"></div></td>
-            </tr>
-            <tr class="todo-row" data-id="insurance" onclick="clickTodoRow('insurance')">
-              <td class="todo-cell-name">安達保險</td>
-              <td><strong>儘快</strong></td>
-              <td>確認 UAE 有沒有加進去</td>
-              <td style="text-align: center;"><div class="todo-cb"></div></td>
-            </tr>
-            <tr class="todo-row" data-id="esim" onclick="clickTodoRow('esim')">
-              <td class="todo-cell-name">Saily eSIM</td>
-              <td><strong>出發前</strong></td>
-              <td>saily.com 歐洲 30 天方案</td>
-              <td style="text-align: center;"><div class="todo-cb"></div></td>
-            </tr>
-            <tr class="todo-row" data-id="find-iceland-food" onclick="clickTodoRow('find-iceland-food')">
-              <td class="todo-cell-name">搜尋冰島市區美食/餐廳</td>
-              <td><strong>出發前</strong></td>
-              <td>搜尋雷克雅維克推薦餐廳（備選清單）</td>
-              <td style="text-align: center;"><div class="todo-cb"></div></td>
-            </tr>
-            <tr class="todo-row" data-id="find-paris-food" onclick="clickTodoRow('find-paris-food')">
-              <td class="todo-cell-name">搜尋巴黎市區美食/餐廳</td>
-              <td><strong>出發前</strong></td>
-              <td>搜尋巴黎推薦小館、甜點與咖啡館</td>
-              <td style="text-align: center;"><div class="todo-cb"></div></td>
-            </tr>
-          </tbody>
-        </table>
+      <div class="todo-hd">🔴 待完成 <span id="todo-pending-count"></span></div>
+      <div id="todo-pending">
+        <div class="todo-item" data-id="anne" data-due="2026-09-15" onclick="clickTodoItem('anne')">
+          <div class="todo-cb"></div>
+          <div class="todo-main">
+            <div class="todo-text">安妮之家門票</div>
+            <div class="todo-meta"><span class="todo-due">9/15 (二) 16:00</span> · 已過搶票時間，到 annefrank.org 查是否還有餘票</div>
+          </div>
+        </div>
+        <div class="todo-item" data-id="mosque-reg" data-due="2026-09-30" onclick="clickTodoItem('mosque-reg')">
+          <div class="todo-cb"></div>
+          <div class="todo-main">
+            <div class="todo-text">謝赫扎耶德清真寺登記</div>
+            <div class="todo-meta"><span class="todo-due">9月底</span> · grandmosque.ae</div>
+          </div>
+        </div>
+        <div class="todo-item" data-id="louvre-ticket" data-due="2026-10-10" onclick="clickTodoItem('louvre-ticket')">
+          <div class="todo-cb"></div>
+          <div class="todo-main">
+            <div class="todo-text">Louvre Abu Dhabi</div>
+            <div class="todo-meta"><span class="todo-due">10月初</span> · louvreabudhabi.ae</div>
+          </div>
+        </div>
+        <div class="todo-item" data-id="insurance" data-due="asap" onclick="clickTodoItem('insurance')">
+          <div class="todo-cb"></div>
+          <div class="todo-main">
+            <div class="todo-text">安達保險</div>
+            <div class="todo-meta"><span class="todo-due">儘快</span> · 確認 UAE 有沒有加進去</div>
+          </div>
+        </div>
+        <div class="todo-item" data-id="dom-tower" data-due="2026-10-26" onclick="clickTodoItem('dom-tower')">
+          <div class="todo-cb"></div>
+          <div class="todo-main">
+            <div class="todo-text">Dom Tower 烏特勒支</div>
+            <div class="todo-meta"><span class="todo-due">出發前</span> · domtower.nl</div>
+          </div>
+        </div>
+        <div class="todo-item" data-id="esim" data-due="2026-10-26" onclick="clickTodoItem('esim')">
+          <div class="todo-cb"></div>
+          <div class="todo-main">
+            <div class="todo-text">Saily eSIM</div>
+            <div class="todo-meta"><span class="todo-due">出發前</span> · saily.com 歐洲 30 天方案</div>
+          </div>
+        </div>
+        <div class="todo-item" data-id="find-iceland-food" data-due="2026-10-26" onclick="clickTodoItem('find-iceland-food')">
+          <div class="todo-cb"></div>
+          <div class="todo-main">
+            <div class="todo-text">搜尋冰島市區美食/餐廳</div>
+            <div class="todo-meta"><span class="todo-due">出發前</span> · 搜尋雷克雅維克推薦餐廳（備選清單）</div>
+          </div>
+        </div>
+        <div class="todo-item" data-id="find-paris-food" data-due="2026-10-26" onclick="clickTodoItem('find-paris-food')">
+          <div class="todo-cb"></div>
+          <div class="todo-main">
+            <div class="todo-text">搜尋巴黎市區美食/餐廳</div>
+            <div class="todo-meta"><span class="todo-due">出發前</span> · 搜尋巴黎推薦小館、甜點與咖啡館</div>
+          </div>
+        </div>
+        <div class="todo-item" data-id="sainte-ticket" data-due="2026-11-05" onclick="clickTodoItem('sainte-ticket')">
+          <div class="todo-cb"></div>
+          <div class="todo-main">
+            <div class="todo-text">Sainte-Chapelle 巴黎</div>
+            <div class="todo-meta"><span class="todo-due">11月初</span> · sainte-chapelle.fr</div>
+          </div>
+        </div>
+        <div class="todo-item" data-id="arc-ticket" data-due="2026-11-05" onclick="clickTodoItem('arc-ticket')">
+          <div class="todo-cb"></div>
+          <div class="todo-main">
+            <div class="todo-text">凱旋門登頂門票</div>
+            <div class="todo-meta"><span class="todo-due">11月初</span> · paris-arc-de-triomphe.fr (建議預訂 17:30 登頂)</div>
+          </div>
+        </div>
       </div>
+      <div class="todo-empty" id="todo-pending-empty" style="display:none;">全部完成了 🎉</div>
     </div>
-    
+
     <div class="todo-card">
-      <div class="todo-hd">🎟 門票預購（其他）</div>
-      <div class="todo-item" data-id="dom-tower" onclick="clickTodoItem('dom-tower')">
-        <div class="todo-cb"></div>
-        <div class="todo-text">Dom Tower 烏特勒支 (domtower.nl)</div>
-      </div>
-      <div class="todo-item" data-id="mauritshuis-tkt" onclick="clickTodoItem('mauritshuis-tkt')">
-        <div class="todo-cb"></div>
-        <div class="todo-text">Mauritshuis 海牙 (mauritshuis.nl)</div>
-      </div>
-    </div>
-    
-    <div class="todo-card">
-      <div class="todo-hd">✅ 已完成項目</div>
-      <div class="todo-item done-item" data-id="ey-flights" onclick="clickTodoItem('ey-flights')">
-        <div class="todo-cb done">✓</div>
-        <div class="todo-text done">EY 大段機票 4 段</div>
-      </div>
-      <div class="todo-item done-item" data-id="seeds-reg" onclick="clickTodoItem('seeds-reg')">
-        <div class="todo-cb done">✓</div>
-        <div class="todo-text done">SEEDS 報名</div>
+      <div class="todo-hd">✅ 已完成 <span id="todo-done-count"></span></div>
+      <div id="todo-done">
+        <div class="todo-item done-item" data-id="mauritshuis-tkt" onclick="clickTodoItem('mauritshuis-tkt')">
+          <div class="todo-cb done">✓</div>
+          <div class="todo-main">
+            <div class="todo-text done">Mauritshuis 海牙門票</div>
+          </div>
+        </div>
+        <div class="todo-item done-item" data-id="ey-flights" onclick="clickTodoItem('ey-flights')">
+          <div class="todo-cb done">✓</div>
+          <div class="todo-main">
+            <div class="todo-text done">EY 大段機票 4 段</div>
+          </div>
+        </div>
+        <div class="todo-item done-item" data-id="seeds-reg" onclick="clickTodoItem('seeds-reg')">
+          <div class="todo-cb done">✓</div>
+          <div class="todo-main">
+            <div class="todo-text done">SEEDS 報名</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -2215,32 +2249,52 @@ function loadTodoState() {
     }
   }
   // Initialize default items if not present
-  const defaultDone = ['ey-flights', 'seeds-reg'];
+  const defaultDone = ['ey-flights', 'seeds-reg', 'mauritshuis-tkt'];
   defaultDone.forEach(id => {
     if (state[id] === undefined) {
       state[id] = true;
     }
   });
-  
-  // Set UI elements（表格列 .todo-row 與清單項 .todo-item 邏輯相同，合併處理避免重複）
-  document.querySelectorAll('.todo-row, .todo-item').forEach(el => {
+
+  // 期限：data-due="YYYY-MM-DD"；"asap" 視為今天到期；沒填的排最後
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+  const dueTime = el => {
+    const due = el.getAttribute('data-due');
+    if (due === 'asap') return today;
+    const t = due ? new Date(due + 'T00:00:00').getTime() : NaN;
+    return isNaN(t) ? Number.MAX_SAFE_INTEGER : t;
+  };
+
+  // 依期限排序後，把每一項放進「待完成」或「已完成」區塊
+  const pendingBox = document.getElementById('todo-pending');
+  const doneBox = document.getElementById('todo-done');
+  const items = Array.from(document.querySelectorAll('.todo-item'));
+  items.sort((a, b) => dueTime(a) - dueTime(b));
+  items.forEach(el => {
     const id = el.getAttribute('data-id');
     const isDone = !!state[id];
-    const doneClass = el.classList.contains('todo-row') ? 'completed' : 'done-item';
     const cb = el.querySelector('.todo-cb');
-    const txt = el.querySelector('.todo-text'); // 表格列沒有這個元素，會是 null
+    const txt = el.querySelector('.todo-text');
 
-    el.classList.toggle(doneClass, isDone);
+    el.classList.toggle('done-item', isDone);
+    el.classList.toggle('overdue', !isDone && dueTime(el) < today);
     cb.classList.toggle('done', isDone);
     cb.textContent = isDone ? '✓' : '';
     if (txt) txt.classList.toggle('done', isDone);
+    (isDone ? doneBox : pendingBox).appendChild(el);
   });
+
+  const pendingCount = pendingBox.children.length;
+  document.getElementById('todo-pending-count').textContent = `(${pendingCount})`;
+  document.getElementById('todo-done-count').textContent = `(${doneBox.children.length})`;
+  document.getElementById('todo-pending-empty').style.display = pendingCount ? 'none' : 'block';
 
   updateTodoProgress();
 }
 
 function updateTodoProgress() {
-  const total = document.querySelectorAll('.todo-row, .todo-item').length;
+  const total = document.querySelectorAll('.todo-item').length;
   const done = document.querySelectorAll('.todo-cb.done').length;
   const pct = total > 0 ? Math.round((done / total) * 100) : 0;
   const progressBar = document.getElementById('todo-progress');
@@ -2259,10 +2313,6 @@ function toggleTodoId(id) {
   state[id] = !state[id];
   localStorage.setItem('milutrip_todo_state', JSON.stringify(state));
   loadTodoState();
-}
-
-function clickTodoRow(id) {
-  toggleTodoId(id);
 }
 
 function clickTodoItem(id) {
@@ -2544,6 +2594,42 @@ function findTodayCard() {
   return best;
 }
 
+// 在今天的行程卡片上標出「現在」進行到哪一項：取開始時間已過的最後一項；
+// 如果今天第一項都還沒開始，就把第一項標成「下一個」。只看 HH:MM 格式的時間，
+// 「全程」「中午」這類文字時間會略過。時間以裝置當地時間為準
+function updateNowMarker(scrollToIt) {
+  document.querySelectorAll('.now-tag').forEach(tag => tag.remove());
+  document.querySelectorAll('.item.now, .dead-bar.now').forEach(el => el.classList.remove('now'));
+
+  const today = findTodayCard();
+  if (!today) return;
+  const card = document.getElementById('ph-' + today.phaseId).querySelectorAll('.day-card')[today.index];
+  if (!card) return;
+
+  const now = new Date();
+  const nowMin = now.getHours() * 60 + now.getMinutes();
+  let current = null;
+  let next = null;
+  card.querySelectorAll('.item, .dead-bar').forEach(el => {
+    const text = (el.querySelector('.item-time, .dead-time')?.textContent || '').trim();
+    const m = text.match(/^(\d{1,2}):(\d{2})$/);
+    if (!m) return;
+    const min = Number(m[1]) * 60 + Number(m[2]);
+    if (min <= nowMin) current = el;
+    else if (!next) next = el;
+  });
+
+  const target = current || next;
+  if (!target) return;
+  target.classList.add('now');
+  const tag = document.createElement('span');
+  tag.className = 'now-tag';
+  tag.textContent = current ? '現在' : '下一個';
+  const nameEl = target.querySelector('.item-name, .dead-text');
+  if (nameEl) nameEl.insertAdjacentElement('afterend', tag); else target.appendChild(tag);
+  if (scrollToIt) target.scrollIntoView({ block: 'center' });
+}
+
 startCountdown();
 const todayCard = findTodayCard();
 if (todayCard) {
@@ -2551,6 +2637,16 @@ if (todayCard) {
   showDayCard(todayCard.phaseId, todayCard.index);
 } else {
   showPhase('abu'); // Init theme & active phase
+}
+updateNowMarker(true);
+setInterval(() => { if (!document.hidden) updateNowMarker(false); }, 60000);
+document.addEventListener('visibilitychange', () => { if (!document.hidden) updateNowMarker(false); });
+
+// 離線支援：註冊 service worker，把網站內容存在手機裡，沒網路也能開
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./sw.js').catch(err => console.warn('離線功能註冊失敗', err));
+  });
 }
 loadTodoState(); // Init checkboxes
 </script>
