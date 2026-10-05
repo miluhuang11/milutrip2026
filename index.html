@@ -1042,8 +1042,11 @@ body {
         <div class="item" onclick="gm('Sheikh+Zayed+Grand+Mosque+Abu+Dhabi')">
           <div class="item-time">09:00</div>
           <div class="item-body">
-            <div class="item-name"><span class="badge badge-green">景點</span>🕌 謝赫扎耶德大清真寺</div>
-            <div class="item-note">晨光最美，遊客最少。官網提前登記（免費），注意著裝</div>
+            <div class="item-name">
+              <span class="badge badge-green">景點</span>🕌 謝赫扎耶德大清真寺
+              <span style="font-size:10px; color:#137333; font-weight:600; margin-left:4px;">☑ 已登記</span>
+            </div>
+            <div class="item-note">晨光最美，遊客最少。已在官網完成登記（免費），注意著裝</div>
             <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
           </div>
         </div>
@@ -2249,7 +2252,7 @@ function loadTodoState() {
     }
   }
   // Initialize default items if not present
-  const defaultDone = ['ey-flights', 'seeds-reg', 'mauritshuis-tkt'];
+  const defaultDone = ['ey-flights', 'seeds-reg', 'mauritshuis-tkt', 'mosque-reg'];
   defaultDone.forEach(id => {
     if (state[id] === undefined) {
       state[id] = true;
