@@ -1517,7 +1517,7 @@ body {
           <div class="item-time">14:50</div>
           <div class="item-body">
             <div class="item-name"><span class="badge badge-green">景點</span>🌊 Canal Saint-Martin 運河散步</div>
-            <div class="item-note">散步體驗巴黎左岸運河的文青氛圍 🌲</div>
+            <div class="item-note">散步體驗巴黎右岸運河的文青氛圍 🌲</div>
             <div class="item-map"><i class="ti ti-map-pin"></i> 點擊開啟地圖</div>
           </div>
         </div>
@@ -1999,8 +1999,8 @@ body {
         <div class="todo-item" data-id="esim" data-due="2026-10-26" onclick="clickTodoItem('esim')">
           <div class="todo-cb"></div>
           <div class="todo-main">
-            <div class="todo-text">Saily eSIM</div>
-            <div class="todo-meta"><span class="todo-due">出發前</span> · saily.com 歐洲 30 天方案</div>
+            <div class="todo-text">買各地的上網 eSIM</div>
+            <div class="todo-meta"><span class="todo-due">出發前</span> · 原本想買 saily.com 歐洲 30 天方案。買之前確認三件事：① 涵蓋荷蘭、冰島、法國三國 ② 阿聯酋通常不在歐洲方案內，兩次阿布達比轉機要另外買或靠機場 WiFi ③ 流量夠用，SEEDS 營隊 9 天沒有 WiFi，全靠行動網路</div>
           </div>
         </div>
         <div class="todo-item" data-id="find-iceland-food" data-due="2026-10-26" onclick="clickTodoItem('find-iceland-food')">
@@ -2258,18 +2258,27 @@ document.addEventListener('keydown', function(e){
   el.click();
 });
 
-const EDIT_PIN = "1106";
+// 編輯密碼只存雜湊值，不存明碼。要換密碼：在瀏覽器主控台執行
+//   pinHash('新密碼').then(console.log)
+// 再把印出來的字串貼到 EDIT_PIN_HASH
+const EDIT_PIN_HASH = "fd4ab8b433bab451d748f85eb05aded862633350287be4c8bd69bff28bbc12f0";
+
+async function pinHash(pin) {
+  const data = new TextEncoder().encode('milutrip2026:' + pin);
+  const digest = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+}
 const UNLOCK_KEY = "milu_trip_unlocked";
 
 function isUnlocked() {
   return localStorage.getItem(UNLOCK_KEY) === "1";
 }
 
-function requireUnlock() {
+async function requireUnlock() {
   if (isUnlocked()) return true;
   const input = prompt("請輸入密碼以進行編輯或操作：");
   if (input === null) return false;
-  if (input === EDIT_PIN) {
+  if (await pinHash(input.trim()) === EDIT_PIN_HASH) {
     localStorage.setItem(UNLOCK_KEY, "1");
     return true;
   }
@@ -2428,8 +2437,8 @@ function updateTodoProgress() {
   if (progressText) progressText.textContent = `已完成 ${pct}% (${done}/${total})`;
 }
 
-function toggleTodoId(id) {
-  if (!requireUnlock()) return;
+async function toggleTodoId(id) {
+  if (!(await requireUnlock())) return;
   const stateStr = localStorage.getItem('milutrip_todo_state');
   let state = {};
   if (stateStr) {
@@ -2468,8 +2477,8 @@ function closeFoodModal() {
   if (modal) modal.style.display = 'none';
 }
 
-function saveFoodMapUrl() {
-  if (!requireUnlock()) return;
+async function saveFoodMapUrl() {
+  if (!(await requireUnlock())) return;
   const input = document.getElementById('food-map-url');
   if (input) {
     const url = input.value.trim();
@@ -2611,8 +2620,8 @@ function clearSearch() {
 }
 
 /* 離線文字備份快照下載 */
-function downloadOfflineBackup() {
-  if (!requireUnlock()) return;
+async function downloadOfflineBackup() {
+  if (!(await requireUnlock())) return;
   let content = `==================================================\n`;
   content += `✈️ MILU20 2026 歐洲自由行與志工旅行離線備份快照 ✈️\n`;
   content += `==================================================\n\n`;
